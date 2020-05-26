@@ -87,14 +87,14 @@ public class TreeLootEntry implements TreeLoot {
     }
 
     /**
-     * @return the min number of loot to drop
+     * @return the min amount of loot to drop
      */
     public int getMin() {
         return this.min;
     }
 
     /**
-     * @return the max number of loot to drop
+     * @return the max amount of loot to drop
      */
     public int getMax() {
         return this.max;

@@ -79,10 +79,10 @@ public class TreeAnimationCrumble extends TreeAnimation {
                             TreeAnimationCrumble.this.fallingTreeBlocks = new TreeBlockSet<>(fallingTreeBlock);
 
                         if (useCustomSound)
-                            TreeAnimationCrumble.this.playLandingSound(treeBlock);
+                            TreeAnimationCrumble.this.playLandingSound(fallingTreeBlock);
 
                         if (useCustomParticles)
-                            TreeAnimationCrumble.this.playFallingParticles(treeBlock);
+                            TreeAnimationCrumble.this.playFallingParticles(fallingTreeBlock);
                     }
 
                     if (partition.isEmpty())

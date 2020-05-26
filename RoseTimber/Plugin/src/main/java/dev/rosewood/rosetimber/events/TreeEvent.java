@@ -17,9 +17,7 @@ public abstract class TreeEvent extends PlayerEvent {
     }
 
     /**
-     * Get the tree blocks
-     * 
-     * @return The blocks that are part of the tree
+     * @return the blocks that are part of the tree
      */
     public DetectedTree getDetectedTree() {
         return this.detectedTree;

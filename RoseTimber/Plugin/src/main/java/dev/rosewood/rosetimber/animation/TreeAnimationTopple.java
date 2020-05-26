@@ -28,16 +28,17 @@ public class TreeAnimationTopple extends TreeAnimation {
         boolean useCustomParticles = Setting.USE_CUSTOM_PARTICLES.getBoolean();
 
         ITreeBlock<Block> initialTreeBlock = this.detectedTree.getDetectedTreeBlocks().getInitialLogBlock();
-        FallingTreeBlock initialFallingBlock = this.convertToFallingBlock((TreeBlock)this.detectedTree.getDetectedTreeBlocks().getInitialLogBlock());
+        FallingTreeBlock initialFallingBlock = this.convertToFallingBlock((TreeBlock) this.detectedTree.getDetectedTreeBlocks().getInitialLogBlock());
 
         if (useCustomSound)
             this.playFallingSound(initialTreeBlock);
 
         Vector velocityVector = initialTreeBlock.getLocation().clone().subtract(this.player.getLocation().clone()).toVector().normalize().setY(0);
 
+        // Convert all blocks into falling blocks and then begin the animation
         this.fallingTreeBlocks = new TreeBlockSet<>(initialFallingBlock);
         for (ITreeBlock<Block> treeBlock : this.detectedTree.getDetectedTreeBlocks().getAllTreeBlocks()) {
-            FallingTreeBlock fallingTreeBlock = this.convertToFallingBlock((TreeBlock)treeBlock);
+            FallingTreeBlock fallingTreeBlock = this.convertToFallingBlock((TreeBlock) treeBlock);
             if (fallingTreeBlock == null)
                 continue;
 
@@ -45,7 +46,7 @@ public class TreeAnimationTopple extends TreeAnimation {
             this.fallingTreeBlocks.add(fallingTreeBlock);
 
             if (useCustomParticles)
-                this.playFallingParticles(treeBlock);
+                this.playFallingParticles(fallingTreeBlock);
 
             double multiplier = (treeBlock.getLocation().getY() - this.player.getLocation().getY()) * 0.05;
             fallingBlock.setVelocity(velocityVector.clone().multiply(multiplier));
@@ -57,6 +58,7 @@ public class TreeAnimationTopple extends TreeAnimation {
 
             @Override
             public void run() {
+                // Cause all the blocks to start falling
                 if (this.timer == 0) {
                     for (ITreeBlock<FallingBlock> fallingTreeBlock : TreeAnimationTopple.this.fallingTreeBlocks.getAllTreeBlocks()) {
                         FallingBlock fallingBlock = fallingTreeBlock.getBlock();
@@ -65,12 +67,14 @@ public class TreeAnimationTopple extends TreeAnimation {
                     }
                 }
 
+                // If all blocks have been destroyed, end the animation
                 if (TreeAnimationTopple.this.fallingTreeBlocks.getAllTreeBlocks().isEmpty()) {
                     whenFinished.run();
                     this.cancel();
                     return;
                 }
 
+                // Make the blocks fall faster than normal
                 for (ITreeBlock<FallingBlock> fallingTreeBlock : TreeAnimationTopple.this.fallingTreeBlocks.getAllTreeBlocks()) {
                     FallingBlock fallingBlock = fallingTreeBlock.getBlock();
                     fallingBlock.setVelocity(fallingBlock.getVelocity().clone().subtract(new Vector(0, 0.05, 0)));
@@ -78,6 +82,7 @@ public class TreeAnimationTopple extends TreeAnimation {
 
                 this.timer++;
 
+                // Expire the animation if it goes on for more than 4 seconds
                 if (this.timer > 4 * 20) {
                     TreeAnimationManager treeAnimationManager = roseTimber.getManager(TreeAnimationManager.class);
                     for (ITreeBlock<FallingBlock> fallingTreeBlock : TreeAnimationTopple.this.fallingTreeBlocks.getAllTreeBlocks())

@@ -15,10 +15,10 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -150,6 +150,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
 
         if (useCustomParticles)
             treeAnimation.playLandingParticles(treeBlock);
+
         if (useCustomSound)
             treeAnimation.playLandingSound(treeBlock);
 
@@ -167,16 +168,19 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
         if (!this.isBlockInAnimation(fallingBlock))
             return;
 
+        TreeAnimation treeAnimation = this.getAnimationForBlock(fallingBlock);
         if (Setting.FALLING_BLOCKS_DEAL_DAMAGE.getBoolean()) {
             int damage = Setting.FALLING_BLOCK_DAMAGE.getInt();
             for (Entity entity : fallingBlock.getNearbyEntities(0.5, 0.5, 0.5)) {
-                if (!(entity instanceof LivingEntity)) continue;
-                ((LivingEntity)entity).damage(damage, fallingBlock);
+                if (!(entity instanceof Damageable))
+                    continue;
+
+                Entity damageSource = treeAnimation == null ? fallingBlock : treeAnimation.getPlayer();
+                ((Damageable) entity).damage(damage, damageSource);
             }
         }
 
         if (Setting.SCATTER_TREE_BLOCKS_ON_GROUND.getBoolean()) {
-            TreeAnimation treeAnimation = this.getAnimationForBlock(fallingBlock);
             if (treeAnimation != null) {
                 treeAnimation.removeFallingBlock(fallingBlock);
                 return;

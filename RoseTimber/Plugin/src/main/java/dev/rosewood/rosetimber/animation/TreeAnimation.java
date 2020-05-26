@@ -45,36 +45,28 @@ public abstract class TreeAnimation {
     public abstract void playAnimation(Runnable whenFinished);
 
     /**
-     * Gets the type of tree animation that this is
-     *
-     * @return The TreeAnimationType
+     * @return the TreeAnimationType of this animation
      */
     public TreeAnimationType getTreeAnimationType() {
         return this.treeAnimationType;
     }
 
     /**
-     * Gets the detected tree
-     *
-     * @return The detected tree
+     * @return the detected tree
      */
     public DetectedTree getDetectedTree() {
         return this.detectedTree;
     }
 
     /**
-     * Gets the player who started this tree animation
-     *
-     * @return The player who started this tree animation
+     * @return the Player who started this tree animation
      */
     public Player getPlayer() {
         return this.player;
     }
 
     /**
-     * Checks if this tree animation has silk touch
-     *
-     * @return True if this animation has silk touch, otherwise false
+     * @return true if this animation has silk touch, otherwise false
      */
     public boolean hasSilkTouch() {
         return this.hasSilkTouch;
