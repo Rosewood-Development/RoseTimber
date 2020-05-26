@@ -1,0 +1,76 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.1.0' apply false
+}
+
+allprojects {
+    apply plugin: 'java'
+	apply plugin: 'com.github.johnrengelman.shadow'
+    group = 'dev.rosewood'
+    version = '1.0.0-SNAPSHOT'
+	sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+	
+	repositories {
+        mavenCentral()
+        jcenter()
+
+        maven { url = 'https://repo.codemc.org/repository/nms' }
+        maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+        maven { url = 'http://maven.playpro.com' }
+
+        maven {
+            url = 'https://repo.rosewooddev.io/repository/maven-public'
+            credentials {
+                username project.mavenUser
+                password project.mavenPassword
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
+    }
+
+    dependencies {
+        shadow 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
+    }
+}
+
+configurations {
+    childJars
+}
+
+dependencies {
+    implementation project(':Core')
+    implementation project(':Plugin')
+	implementation project(':Jobs')
+	implementation project(':McMMO')
+	implementation project(':McMMOClassic')
+	implementation project(':CoreProtect')
+
+    subprojects.each {
+        childJars project(it.path)
+    }
+}
+
+shadowJar {
+    archiveClassifier.set(null)
+
+    relocate('org.bstats', 'dev.rosewood.rosetimber.libs.bstats')
+    //relocate('co.aikar.commands', 'dev.rosewood.rosetimber.lib.acf.commands')
+    //relocate('co.aikar.locales', 'dev.rosewood.rosetimber.lib.acf.locales')
+    //relocate('co.aikar.timings', 'dev.rosewood.rosetimber.lib.acf.timings')
+    //relocate('co.aikar.util', 'dev.rosewood.rosetimber.lib.acf.util')
+
+    //exclude 'acf-*.properties'
+}
+
+jar {
+    dependsOn configurations.childJars
+    from {
+        configurations.childJars.collect {
+            zipTree(it)
+        }
+    }
+}
+
+build.dependsOn shadowJar

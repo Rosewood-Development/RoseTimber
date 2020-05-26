@@ -1,0 +1,31 @@
+name: RoseTimber
+version: '@version@'
+author: Esophose
+main: dev.rosewood.rosetimber.RoseTimber
+api-version: '1.13'
+softdepend: [mcMMO, Jobs]
+commands:
+  rosetimber:
+    description: Reloads the configuration file
+    usage: /rosetimber reload
+    aliases: [rt]
+permissions:
+  rosetimber.*:
+    description: Inherits all plugin permissions
+    children:
+      rosetimber.chop: true
+      rosetimber.bonusloot: true
+      rosetimber.reload: true
+      rosetimber.bypasscooldown: true
+  rosetimber.chop:
+    description: Allows players to trigger the trees toppling down effect
+    default: op
+  rosetimber.bonusloot:
+    description: Doubles the loot obtained from trees
+    default: op
+  rosetimber.reload:
+    description: Reloads the configuration file
+    default: op
+  rosetimber.bypasscooldown:
+    description: Allows a player to bypass the tree topple cooldown
+    default: op

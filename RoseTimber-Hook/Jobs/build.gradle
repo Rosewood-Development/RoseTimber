@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':Core')
+    shadow 'com.gamingmesh.jobs:jobs:4.15.11'
+}
