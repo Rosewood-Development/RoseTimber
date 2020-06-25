@@ -20,7 +20,7 @@ dependencies {
     implementation project(':McMMOClassic')
 
     // Referenced dependencies
-    shadow 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
+    shadow 'org.spigotmc:spigot:1.16.1'
 
     // From our repo
 

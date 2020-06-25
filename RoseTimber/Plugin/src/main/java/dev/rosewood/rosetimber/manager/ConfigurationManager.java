@@ -3,6 +3,7 @@ package dev.rosewood.rosetimber.manager;
 import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.animation.TreeAnimationType;
 import dev.rosewood.rosetimber.config.CommentedFileConfiguration;
+import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
 import dev.rosewood.rosetimber.utils.TimberUtils;
 import java.io.File;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class ConfigurationManager extends Manager {
         BREAK_ENTIRE_TREE_BASE("break-entire-tree-base", false, "Require the entire base of the tree to be broken before it topples"),
         DESTROY_INITIATED_BLOCK("destroy-initiated-block", false, "Don't drop a block for the block that initiates the tree fall"),
         ONLY_DETECT_LOGS_UPWARDS("only-detect-logs-upwards", true, "Only detect logs above the initiated block"),
-        ONLY_TOPPLE_WHILE("only-topple-while", "ALWAYS", "Only topple trees while the player is doing something", "Valid values: SNEAKING, NOT_SNEAKING, ALWAYS"),
+        ONLY_TOPPLE_WHILE("only-topple-while", "ALWAYS", "Only topple trees while the player is doing something", "Valid values: " + Stream.of(OnlyToppleWhile.values()).map(Enum::name).collect(Collectors.joining(", "))),
         ALLOW_CREATIVE_MODE("allow-creative-mode", true, "Allow toppling trees in creative mode"),
         REQUIRE_CHOP_PERMISSION("require-chop-permission", false, "Require the player to have the permission 'rosetimber.chop' to topple trees"),
         PLAYER_TREE_TOPPLE_COOLDOWN("player-tree-topple-cooldown", false, "If a player should only be allowed to chop one tree per cooldown length"),
@@ -62,6 +63,8 @@ public class ConfigurationManager extends Manager {
         HOOKS_APPLY_EXPERIENCE("hooks-apply-experience", true, "Applies experience when using Jobs/mcMMO", "Only does something if Jobs or mcMMO is installed"),
         HOOKS_APPLY_EXTRA_DROPS("hooks-apply-extra-drops", true, "Applies extra drops passive ability when using mcMMO", "Only does something if mcMMO is installed"),
         HOOKS_REQUIRE_ABILITY_ACTIVE("hooks-require-ability-active", false, "Requires the tree feller ability in mcMMO to be active to use timber", "Only does something if mcMMO is installed"),
+
+        // TODO: Move these two settings to the tree definitions
         TREE_ANIMATION_TYPE("tree-animation-type", "TOPPLE", "The type of animation to use for tree toppling", "Types: " + Stream.of(TreeAnimationType.values()).map(Enum::name).collect(Collectors.joining(", "))),
         SCATTER_TREE_BLOCKS_ON_GROUND("scatter-tree-blocks-on-ground", false, "If the tree-animation-type is TOPPLE or CRUMBLE, make the blocks stick to the ground", "Does nothing if tree-animation-type is not TOPPLE or CRUMBLE");
 

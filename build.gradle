@@ -14,7 +14,7 @@ allprojects {
         mavenCentral()
         jcenter()
 
-        maven { url = 'https://repo.codemc.org/repository/nms' }
+        maven { url = 'https://repo.rosewooddev.io/repository/public/' }
         maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
         maven { url = 'http://maven.playpro.com' }
 
@@ -31,7 +31,7 @@ allprojects {
     }
 
     dependencies {
-        shadow 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
+        shadow 'org.spigotmc:spigot:1.16.1'
     }
 }
 

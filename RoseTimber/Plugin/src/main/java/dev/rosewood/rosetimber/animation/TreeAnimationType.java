@@ -7,7 +7,6 @@ public enum TreeAnimationType {
     TOPPLE,
     DISINTEGRATE,
     CRUMBLE,
-    EXPLODE,
     NONE;
 
     /**

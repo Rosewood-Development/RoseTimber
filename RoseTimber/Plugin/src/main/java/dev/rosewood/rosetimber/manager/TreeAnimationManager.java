@@ -93,6 +93,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      * Checks if the given block is in an animation
      *
      * @param block The block to check
+     * @return true if the block is in an animation, otherwise false
      */
     public boolean isBlockInAnimation(Block block) {
         for (TreeAnimation treeAnimation : this.activeAnimations)
@@ -106,6 +107,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      * Checks if the given falling block is in an animation
      *
      * @param fallingBlock The falling block to check
+     * @return true if the block is in an animation, otherwise false
      */
     public boolean isBlockInAnimation(FallingBlock fallingBlock) {
         for (TreeAnimation treeAnimation : this.activeAnimations)
@@ -118,6 +120,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
     /**
      * Gets a TreeAnimation that a given falling block is in
      *
+     * @param fallingBlock The falling block to check for
      * @return A TreeAnimation
      */
     private TreeAnimation getAnimationForBlock(FallingBlock fallingBlock) {

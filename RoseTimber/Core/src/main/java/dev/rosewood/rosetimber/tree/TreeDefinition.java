@@ -3,6 +3,7 @@ package dev.rosewood.rosetimber.tree;
 import dev.rosewood.rosetimber.tree.loot.TreeLoot;
 import dev.rosewood.rosetimber.tree.loot.TreeLootEntry;
 import dev.rosewood.rosetimber.tree.loot.TreeLootPool;
+import dev.rosewood.rosetimber.utils.NMSUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -166,7 +167,9 @@ public class TreeDefinition {
      * @return a List of default TreeDefinitions
      */
     public static List<TreeDefinition> getDefaultTreeDefinitions() {
-        TreeDefinition oak = new TreeDefinition(
+        List<TreeDefinition> treeDefinitions = new ArrayList<>();
+
+        treeDefinitions.add(new TreeDefinition(
                 "oak",
                 Arrays.asList(Material.OAK_LOG, Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD),
                 Collections.singletonList(Material.OAK_LEAVES),
@@ -185,9 +188,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition spruce = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "spruce",
                 Arrays.asList(Material.SPRUCE_LOG, Material.STRIPPED_SPRUCE_LOG, Material.SPRUCE_WOOD, Material.STRIPPED_SPRUCE_WOOD),
                 Collections.singletonList(Material.SPRUCE_LEAVES),
@@ -205,9 +208,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition birch = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "birch",
                 Arrays.asList(Material.BIRCH_LOG, Material.STRIPPED_BIRCH_LOG, Material.BIRCH_WOOD, Material.STRIPPED_BIRCH_WOOD),
                 Collections.singletonList(Material.BIRCH_LEAVES),
@@ -225,9 +228,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition jungle = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "jungle",
                 Arrays.asList(Material.JUNGLE_LOG, Material.STRIPPED_JUNGLE_LOG, Material.JUNGLE_WOOD, Material.STRIPPED_JUNGLE_WOOD),
                 Collections.singletonList(Material.JUNGLE_LEAVES),
@@ -245,9 +248,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition acacia = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "acacia",
                 Arrays.asList(Material.ACACIA_LOG, Material.STRIPPED_ACACIA_LOG, Material.ACACIA_WOOD, Material.STRIPPED_ACACIA_WOOD),
                 Collections.singletonList(Material.ACACIA_LEAVES),
@@ -265,9 +268,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition darkOak = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "dark_oak",
                 Arrays.asList(Material.DARK_OAK_LOG, Material.STRIPPED_DARK_OAK_LOG, Material.DARK_OAK_WOOD, Material.STRIPPED_DARK_OAK_WOOD),
                 Collections.singletonList(Material.DARK_OAK_LEAVES),
@@ -286,9 +289,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition brownMushroom = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "brown_mushroom",
                 Collections.singletonList(Material.MUSHROOM_STEM),
                 Collections.singletonList(Material.BROWN_MUSHROOM_BLOCK),
@@ -305,9 +308,9 @@ public class TreeDefinition {
                 ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        TreeDefinition redMushroom = new TreeDefinition(
+        treeDefinitions.add(new TreeDefinition(
                 "red_mushroom",
                 Collections.singletonList(Material.MUSHROOM_STEM),
                 Collections.singletonList(Material.RED_MUSHROOM_BLOCK),
@@ -322,9 +325,46 @@ public class TreeDefinition {
                 new TreeLootEntry(100, new ItemStack(Material.RED_MUSHROOM), null, -6, 2),
                 TreeLootPool.empty(),
                 new ArrayList<>()
-        );
+        ));
 
-        return Arrays.asList(oak, spruce, birch, jungle, acacia, darkOak, brownMushroom, redMushroom);
+        // Nether trees
+        if (NMSUtil.getVersionNumber() > 15) {
+            treeDefinitions.add(new TreeDefinition(
+                    "crimson",
+                    Arrays.asList(Material.CRIMSON_STEM, Material.STRIPPED_CRIMSON_STEM, Material.CRIMSON_HYPHAE, Material.STRIPPED_CRIMSON_HYPHAE),
+                    Arrays.asList(Material.NETHER_WART_BLOCK, Material.SHROOMLIGHT),
+                    Material.CRIMSON_FUNGUS,
+                    Collections.singletonList(Material.CRIMSON_NYLIUM),
+                    2.5,
+                    5,
+                    true,
+                    true,
+                    true,
+                    TreeLootPool.empty(),
+                    TreeLootPool.empty(),
+                    TreeLootPool.empty(),
+                    new ArrayList<>()
+            ));
+
+            treeDefinitions.add(new TreeDefinition(
+                    "warped",
+                    Arrays.asList(Material.WARPED_STEM, Material.STRIPPED_WARPED_STEM, Material.WARPED_HYPHAE, Material.STRIPPED_WARPED_HYPHAE),
+                    Arrays.asList(Material.WARPED_WART_BLOCK, Material.SHROOMLIGHT),
+                    Material.WARPED_FUNGUS,
+                    Collections.singletonList(Material.WARPED_NYLIUM),
+                    2.5,
+                    5,
+                    true,
+                    true,
+                    true,
+                    TreeLootPool.empty(),
+                    TreeLootPool.empty(),
+                    TreeLootPool.empty(),
+                    new ArrayList<>()
+            ));
+        }
+
+        return treeDefinitions;
     }
 
     /**
@@ -363,7 +403,12 @@ public class TreeDefinition {
      * @return the default required tools for all tree definitions
      */
     public static List<Material> getDefaultGlobalRequiredTools() {
-        return Arrays.asList(Material.WOODEN_AXE, Material.STONE_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE);
+        List<Material> materials = new ArrayList<>(Arrays.asList(Material.WOODEN_AXE, Material.STONE_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE));
+
+        if (NMSUtil.getVersionNumber() >= 16)
+            materials.add(Material.NETHERITE_AXE);
+
+        return materials;
     }
 
 }
