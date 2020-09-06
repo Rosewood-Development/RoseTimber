@@ -1,8 +1,9 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.config.CommentedConfigurationSection;
-import dev.rosewood.rosetimber.config.CommentedFileConfiguration;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.config.CommentedConfigurationSection;
+import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
@@ -33,8 +34,9 @@ public class TreeDefinitionManager extends Manager {
     private TreeLoot globalLogLoot, globalLeafLoot, globalEntireTreeLoot;
     private List<ItemStack> globalRequiredTools;
 
-    public TreeDefinitionManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public TreeDefinitionManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
         this.treeDefinitions = new ArrayList<>();
         this.globalPlantableSoil = new ArrayList<>();
         this.globalRequiredTools = new ArrayList<>();
@@ -42,14 +44,14 @@ public class TreeDefinitionManager extends Manager {
 
     @Override
     public void reload() {
-        File file = new File(this.roseTimber.getDataFolder(), FILE_NAME);
+        File file = new File(this.rosePlugin.getDataFolder(), FILE_NAME);
         this.createFileIfNotExists(file);
 
         this.treeDefinitions.clear();
         this.globalPlantableSoil.clear();
         this.globalRequiredTools.clear();
 
-        CommentedFileConfiguration config = CommentedFileConfiguration.loadConfiguration(this.roseTimber, file);
+        CommentedFileConfiguration config = CommentedFileConfiguration.loadConfiguration(file);
 
         // Load tree settings
         ConfigurationSection treeSection = config.getConfigurationSection("trees");
@@ -158,7 +160,7 @@ public class TreeDefinitionManager extends Manager {
         if (file.exists())
             return;
 
-        CommentedFileConfiguration config = CommentedFileConfiguration.loadConfiguration(this.roseTimber, file);
+        CommentedFileConfiguration config = CommentedFileConfiguration.loadConfiguration(file);
         config.addComments(
                 "Tree configuration",
                 "Allows for extreme fine-tuning of tree detection and what are considered trees",
@@ -365,7 +367,7 @@ public class TreeDefinitionManager extends Manager {
      * @param isForEntireTree If the loot is for the entire tree
      */
     public void dropTreeLoot(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock, Player player, boolean hasSilkTouch, boolean isForEntireTree) {
-        HookManager hookManager = this.roseTimber.getManager(HookManager.class);
+        HookManager hookManager = this.rosePlugin.getManager(HookManager.class);
 
         boolean addToInventory = Setting.ADD_ITEMS_TO_INVENTORY.getBoolean();
         boolean hasBonusChance = player.hasPermission("rosetimber.bonusloot");
@@ -427,11 +429,11 @@ public class TreeDefinitionManager extends Manager {
                 extraItems.addAll(player.getInventory().addItem(lootedItem).values());
             Location location = player.getLocation().clone().subtract(0.5, 0, 0.5);
             for (ItemStack extraItem : extraItems)
-                location.getWorld().dropItemNaturally(location, extraItem);
+                player.getWorld().dropItemNaturally(location, extraItem);
         } else {
             Location location = treeBlock.getLocation().clone().add(0.5, 0.5, 0.5);
             for (ItemStack lootedItem : lootedItems)
-                location.getWorld().dropItemNaturally(location, lootedItem);
+                player.getWorld().dropItemNaturally(location, lootedItem);
         }
 
         // Run looted commands

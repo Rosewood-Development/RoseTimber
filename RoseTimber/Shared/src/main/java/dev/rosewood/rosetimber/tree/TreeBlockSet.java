@@ -94,10 +94,9 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean remove(Object o) {
         if (!(o instanceof ITreeBlock)) return false;
-        ITreeBlock<BlockType> treeBlock = (ITreeBlock<BlockType>) o;
+        ITreeBlock<?> treeBlock = (ITreeBlock<?>) o;
         switch (treeBlock.getTreeBlockType()) {
             case LOG:
                 return this.logBlocks.remove(treeBlock);
@@ -125,7 +124,7 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
     }
 
     @Override
-    public boolean retainAll(Collection c) {
+    public boolean retainAll(Collection<?> c) {
         boolean retainedAll = true;
         for (Object o : c) {
             if (!this.contains(o)) {
@@ -138,7 +137,7 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
     }
 
     @Override
-    public boolean removeAll(Collection c) {
+    public boolean removeAll(Collection<?> c) {
         boolean removedAll = true;
         for (Object o : c) {
             if (this.contains(o)) {
@@ -170,7 +169,7 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
     }
 
     @Override
-    public boolean containsAll(Collection c) {
+    public boolean containsAll(Collection<?> c) {
         for (Object o : c)
             if (!this.contains(o))
                 return false;
@@ -178,13 +177,8 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Object[] toArray(Object[] a) {
-        Set<ITreeBlock<BlockType>> treeBlocks = new HashSet<>();
-        for (Object o : a)
-            if (o instanceof ITreeBlock)
-                treeBlocks.add((ITreeBlock<BlockType>) o);
-        return treeBlocks.toArray();
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException("TreeBlockSet does not support this operation.");
     }
 
 }

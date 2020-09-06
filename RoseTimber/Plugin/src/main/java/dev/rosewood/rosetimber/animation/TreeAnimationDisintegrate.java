@@ -1,7 +1,6 @@
 package dev.rosewood.rosetimber.animation;
 
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.manager.ConfigurationManager;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.manager.TreeDefinitionManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;

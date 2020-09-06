@@ -1,6 +1,7 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
@@ -26,8 +27,8 @@ public class TreeDetectionManager extends Manager {
     private int maxLogBlocksAllowed, numLeavesRequiredForTree;
     private boolean onlyBreakLogsUpwards, entireTreeBase, destroyLeaves;
 
-    public TreeDetectionManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public TreeDetectionManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
 
         this.VALID_BRANCH_OFFSETS = new ArrayList<>();
         this.VALID_TRUNK_OFFSETS = new ArrayList<>();
@@ -55,8 +56,8 @@ public class TreeDetectionManager extends Manager {
 
     @Override
     public void reload() {
-        this.treeDefinitionManager = this.roseTimber.getManager(TreeDefinitionManager.class);
-        this.placedBlockManager = this.roseTimber.getManager(PlacedBlockManager.class);
+        this.treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
+        this.placedBlockManager = this.rosePlugin.getManager(PlacedBlockManager.class);
         this.maxLogBlocksAllowed = Setting.MAX_LOGS_PER_CHOP.getInt();
         this.numLeavesRequiredForTree = Setting.LEAVES_REQUIRED_FOR_TREE.getInt();
         this.onlyBreakLogsUpwards = Setting.ONLY_DETECT_LOGS_UPWARDS.getBoolean();
@@ -76,8 +77,6 @@ public class TreeDetectionManager extends Manager {
      * @return A DetectedTree if one was found, otherwise null
      */
     public DetectedTree detectTree(Block initialBlock) {
-        TreeDefinitionManager treeDefinitionManager = this.roseTimber.getManager(TreeDefinitionManager.class);
-
         TreeBlock initialTreeBlock = new TreeBlock(initialBlock, TreeBlockType.LOG);
         TreeBlockSet<Block> detectedTreeBlocks = new TreeBlockSet<>(initialTreeBlock);
         List<TreeDefinition> possibleTreeDefinitions = this.treeDefinitionManager.getTreeDefinitionsForLog(initialBlock);
@@ -136,7 +135,7 @@ public class TreeDetectionManager extends Manager {
                 Block blockBelow = block.getRelative(BlockFace.DOWN);
                 boolean blockBelowIsLog = this.isValidLogType(possibleTreeDefinitions, null, blockBelow);
                 boolean blockBelowIsSoil = false;
-                for (Material blockType : treeDefinitionManager.getPlantableSoilBlockTypes(actualTreeDefinition)) {
+                for (Material blockType : this.treeDefinitionManager.getPlantableSoilBlockTypes(actualTreeDefinition)) {
                     if (blockType == blockBelow.getType()) {
                         blockBelowIsSoil = true;
                         break;

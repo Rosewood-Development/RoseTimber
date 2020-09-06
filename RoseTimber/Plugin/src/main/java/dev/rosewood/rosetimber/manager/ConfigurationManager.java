@@ -1,34 +1,19 @@
 package dev.rosewood.rosetimber.manager;
 
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
+import dev.rosewood.rosegarden.config.RoseSetting;
+import dev.rosewood.rosegarden.manager.AbstractConfigurationManager;
 import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.animation.TreeAnimationType;
-import dev.rosewood.rosetimber.config.CommentedFileConfiguration;
 import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
-import dev.rosewood.rosetimber.utils.TimberUtils;
-import java.io.File;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConfigurationManager extends Manager {
+public class ConfigurationManager extends AbstractConfigurationManager {
 
-    private static final String[] HEADER = new String[] {
-            "__________                  ___________ __       ___",
-            "\\______   \\ ____  ______ ___\\__    ___/|__| _____\\_ |__   ___________",
-            " |       _//  _ \\/  ___// __ \\|    |   |  |/     \\| __ \\_/ __ \\_  __ \\",
-            " |    |   (  <_> )___ \\\\  ___/|    |   |  |  Y Y  \\ \\_\\ \\  ___/|  | \\/",
-            " |____|_  /\\____/____  >\\___  >____|   |__|__|_|  /___  /\\___  >__|",
-            "        \\/           \\/     \\/                  \\/    \\/     \\/"
-    };
-
-    private static final String[] FOOTER = new String[] {
-            "That's everything! You reached the end of the configuration.",
-            "Enjoy the plugin!"
-    };
-
-    public enum Setting {
-        LOCALE("locale", "en_US", "The locale to use in the /locale folder"),
+    public enum Setting implements RoseSetting {
         DISABLED_WORLDS("disabled-worlds", Collections.singletonList("disabled_world_name"), "A list of worlds that the plugin is disabled in"),
 
         MAX_LOGS_PER_CHOP("max-logs-per-chop", 150, "The max number of logs that can be broken at one time"),
@@ -79,173 +64,51 @@ public class ConfigurationManager extends Manager {
             this.comments = comments != null ? comments : new String[0];
         }
 
-        /**
-         * @return the setting as a boolean
-         */
-        public boolean getBoolean() {
-            this.loadValue();
-            return (boolean) this.value;
+        @Override
+        public String getKey() {
+            return this.key;
         }
 
-        /**
-         * @return the setting as an int
-         */
-        public int getInt() {
-            this.loadValue();
-            return (int) this.getNumber();
+        @Override
+        public Object getDefaultValue() {
+            return this.defaultValue;
         }
 
-        /**
-         * @return the setting as a long
-         */
-        public long getLong() {
-            this.loadValue();
-            return (long) this.getNumber();
+        @Override
+        public String[] getComments() {
+            return this.comments;
         }
 
-        /**
-         * @return the setting as a double
-         */
-        public double getDouble() {
-            this.loadValue();
-            return this.getNumber();
+        @Override
+        public Object getCachedValue() {
+            return this.value;
         }
 
-        /**
-         * @return the setting as a float
-         */
-        public float getFloat() {
-            this.loadValue();
-            return (float) this.getNumber();
+        @Override
+        public void setCachedValue(Object value) {
+            this.value = value;
         }
 
-        /**
-         * @return the setting as a String
-         */
-        public String getString() {
-            this.loadValue();
-            return (String) this.value;
-        }
-
-        private double getNumber() {
-            if (this.value instanceof Integer) {
-                return (int) this.value;
-            } else if (this.value instanceof Short) {
-                return (short) this.value;
-            } else if (this.value instanceof Byte) {
-                return (byte) this.value;
-            } else if (this.value instanceof Float) {
-                return (float) this.value;
-            }
-
-            return (double) this.value;
-        }
-
-        /**
-         * @return the setting as a string list
-         */
-        @SuppressWarnings("unchecked")
-        public List<String> getStringList() {
-            this.loadValue();
-            return (List<String>) this.value;
-        }
-
-        public boolean setIfNotExists(CommentedFileConfiguration fileConfiguration) {
-            this.loadValue();
-
-            if (fileConfiguration.get(this.key) == null) {
-                List<String> comments = Stream.of(this.comments).collect(Collectors.toList());
-                if (!(this.defaultValue instanceof List) && this.defaultValue != null) {
-                    String defaultComment = "Default: ";
-                    if (this.defaultValue instanceof String) {
-                        if (TimberUtils.containsConfigSpecialCharacters((String) this.defaultValue)) {
-                            defaultComment += "'" + this.defaultValue + "'";
-                        } else {
-                            defaultComment += this.defaultValue;
-                        }
-                    } else {
-                        defaultComment += this.defaultValue;
-                    }
-                    comments.add(defaultComment);
-                }
-
-                if (this.defaultValue != null) {
-                    fileConfiguration.set(this.key, this.defaultValue, comments.toArray(new String[0]));
-                } else {
-                    fileConfiguration.addComments(comments.toArray(new String[0]));
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
-         * Resets the cached value
-         */
-        public void reset() {
-            this.value = null;
-        }
-
-        /**
-         * @return true if this setting is only a section and doesn't contain an actual value
-         */
-        public boolean isSection() {
-            return this.defaultValue == null;
-        }
-
-        /**
-         * Loads the value from the config and caches it if it isn't set yet
-         */
-        private void loadValue() {
-            if (this.value != null)
-                return;
-
-            this.value = RoseTimber.getInstance().getManager(ConfigurationManager.class).getConfig().get(this.key);
+        @Override
+        public CommentedFileConfiguration getBaseConfig() {
+            return RoseTimber.getInstance().getManager(ConfigurationManager.class).getConfig();
         }
     }
 
-    private CommentedFileConfiguration configuration;
-
-    public ConfigurationManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public ConfigurationManager(RosePlugin rosePlugin) {
+        super(rosePlugin, Setting.class);
     }
 
     @Override
-    public void reload() {
-        File configFile = new File(this.roseTimber.getDataFolder(), "config.yml");
-        boolean setHeaderFooter = !configFile.exists();
-        boolean changed = setHeaderFooter;
-
-        this.configuration = CommentedFileConfiguration.loadConfiguration(this.roseTimber, configFile);
-
-        if (setHeaderFooter)
-            this.configuration.addComments(HEADER);
-
-        for (Setting setting : Setting.values()) {
-            setting.reset();
-            changed |= setting.setIfNotExists(this.configuration);
-        }
-
-        if (setHeaderFooter)
-            this.configuration.addComments(FOOTER);
-
-        if (changed)
-            this.configuration.save();
-    }
-
-    @Override
-    public void disable() {
-        for (Setting setting : Setting.values())
-            setting.reset();
-    }
-
-    /**
-     * @return the config.yml as a CommentedFileConfiguration
-     */
-    public CommentedFileConfiguration getConfig() {
-        return this.configuration;
+    protected String[] getHeader() {
+        return new String[] {
+                "__________                  ___________ __       ___",
+                "\\______   \\ ____  ______ ___\\__    ___/|__| _____\\_ |__   ___________",
+                " |       _//  _ \\/  ___// __ \\|    |   |  |/     \\| __ \\_/ __ \\_  __ \\",
+                " |    |   (  <_> )___ \\\\  ___/|    |   |  |  Y Y  \\ \\_\\ \\  ___/|  | \\/",
+                " |____|_  /\\____/____  >\\___  >____|   |__|__|_|  /___  /\\___  >__|",
+                "        \\/           \\/     \\/                  \\/    \\/     \\/"
+        };
     }
 
 }

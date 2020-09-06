@@ -1,6 +1,7 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
@@ -16,11 +17,12 @@ import org.bukkit.block.BlockFace;
 
 public class SaplingManager extends Manager {
 
-    private Random random;
-    private Set<Location> protectedSaplings;
+    private final Random random;
+    private final Set<Location> protectedSaplings;
 
-    public SaplingManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public SaplingManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
         this.random = new Random();
         this.protectedSaplings = new HashSet<>();
     }
@@ -50,7 +52,7 @@ public class SaplingManager extends Manager {
         if (!block.getType().equals(Material.AIR) || treeBlock.getTreeBlockType().equals(TreeBlockType.LEAF))
             return;
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.roseTimber, () -> this.internalReplant(treeDefinition, treeBlock), 1L);
+        Bukkit.getScheduler().runTask(this.rosePlugin, () -> this.internalReplant(treeDefinition, treeBlock));
     }
 
     /**
@@ -68,7 +70,7 @@ public class SaplingManager extends Manager {
         if (this.random.nextDouble() > chance / 100)
             return;
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.roseTimber, () -> this.internalReplant(treeDefinition, treeBlock), 1L);
+        Bukkit.getScheduler().runTask(this.rosePlugin, () -> this.internalReplant(treeDefinition, treeBlock));
     }
 
     /**
@@ -78,7 +80,7 @@ public class SaplingManager extends Manager {
      * @param treeBlock The ITreeBlock to replant for
      */
     private void internalReplant(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock) {
-        TreeDefinitionManager treeDefinitionManager = this.roseTimber.getManager(TreeDefinitionManager.class);
+        TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
 
         Block block = treeBlock.getLocation().getBlock();
         Block blockBelow = block.getRelative(BlockFace.DOWN);
@@ -98,7 +100,7 @@ public class SaplingManager extends Manager {
         int cooldown = Setting.REPLANT_SAPLINGS_COOLDOWN.getInt();
         if (cooldown != 0) {
             this.protectedSaplings.add(block.getLocation());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this.roseTimber, () -> this.protectedSaplings.remove(block.getLocation()), cooldown * 20L);
+            Bukkit.getScheduler().runTaskLater(this.rosePlugin, () -> this.protectedSaplings.remove(block.getLocation()), cooldown * 20L);
         }
     }
 

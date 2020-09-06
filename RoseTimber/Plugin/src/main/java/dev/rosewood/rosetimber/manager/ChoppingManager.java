@@ -1,5 +1,7 @@
 package dev.rosewood.rosetimber.manager;
 
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import java.util.HashMap;
@@ -12,13 +14,14 @@ import org.bukkit.entity.Player;
 
 public class ChoppingManager extends Manager {
 
-    private Set<UUID> disabledPlayers;
-    private Map<UUID, Boolean> cooldownedPlayers;
+    private final Set<UUID> disabledPlayers;
+    private final Map<UUID, Boolean> cooldownedPlayers;
     private boolean useCooldown;
     private int cooldownAmount;
 
-    public ChoppingManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public ChoppingManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
         this.disabledPlayers = new HashSet<>();
         this.cooldownedPlayers = new HashMap<>();
     }
@@ -72,7 +75,7 @@ public class ChoppingManager extends Manager {
 
         this.cooldownedPlayers.put(player.getUniqueId(), false);
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(RoseTimber.getInstance(), () ->
+        Bukkit.getScheduler().runTaskLater(RoseTimber.getInstance(), () ->
                 this.cooldownedPlayers.remove(player.getUniqueId()), this.cooldownAmount * 20L);
     }
 
@@ -85,7 +88,7 @@ public class ChoppingManager extends Manager {
     public boolean isInCooldown(Player player) {
         boolean cooldowned = this.useCooldown && this.cooldownedPlayers.containsKey(player.getUniqueId());
         if (cooldowned && !this.cooldownedPlayers.get(player.getUniqueId())) {
-            LocaleManager localeManager = this.roseTimber.getManager(LocaleManager.class);
+            LocaleManager localeManager = this.rosePlugin.getManager(LocaleManager.class);
             localeManager.sendMessage(player, "on-cooldown");
             this.cooldownedPlayers.replace(player.getUniqueId(), true);
         }

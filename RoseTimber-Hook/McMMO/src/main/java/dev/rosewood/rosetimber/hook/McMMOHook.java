@@ -10,12 +10,11 @@ import com.gmail.nossr50.util.random.RandomChanceUtil;
 import com.gmail.nossr50.util.skills.RankUtils;
 import com.gmail.nossr50.util.skills.SkillActivationType;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
+import java.util.ArrayList;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
 
 public class McMMOHook implements TimberHook {
 

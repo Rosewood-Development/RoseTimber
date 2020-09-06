@@ -1,4 +1,4 @@
 dependencies {
-    implementation project(':Core')
+    implementation project(':Shared')
     shadow 'com.gmail.nossr50:mcmmo-classic:1.6.2'
 }

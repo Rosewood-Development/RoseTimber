@@ -57,12 +57,12 @@ public class TimberUtils {
     public static Collection<ItemStack> getBlockDrops(ITreeBlock<?> treeBlock) {
         Set<ItemStack> drops = new HashSet<>();
         if (treeBlock.getBlock() instanceof Block) {
-            Block block = (Block)treeBlock.getBlock();
+            Block block = (Block) treeBlock.getBlock();
             if (block.getType().equals(Material.AIR))
                 return drops;
             drops.add(new ItemStack(block.getType()));
         } else if (treeBlock.getBlock() instanceof FallingBlock) {
-            FallingBlock fallingBlock = (FallingBlock)treeBlock.getBlock();
+            FallingBlock fallingBlock = (FallingBlock) treeBlock.getBlock();
             drops.add(new ItemStack(fallingBlock.getBlockData().getMaterial()));
         }
         return drops;
@@ -78,7 +78,7 @@ public class TimberUtils {
 
         int actualDamage = 0;
         for (int i = 0; i < damage; i++)
-            if (TimberUtils.checkUnbreakingChance(unbreakingLevel))
+            if (checkUnbreakingChance(unbreakingLevel))
                 actualDamage++;
 
         damageable.setDamage(damageable.getDamage() + actualDamage);

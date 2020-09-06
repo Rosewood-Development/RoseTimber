@@ -1,11 +1,12 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.events.TreeFallEvent;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
-import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
 import dev.rosewood.rosetimber.tree.DetectedTree;
+import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
 import dev.rosewood.rosetimber.utils.TimberUtils;
 import org.bukkit.Bukkit;
@@ -22,9 +23,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class TreeFallManager extends Manager implements Listener {
 
-    public TreeFallManager(RoseTimber roseTimber) {
-        super(roseTimber);
-        Bukkit.getPluginManager().registerEvents(this, roseTimber);
+    public TreeFallManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
+        Bukkit.getPluginManager().registerEvents(this, rosePlugin);
     }
 
     @Override
@@ -39,12 +41,12 @@ public class TreeFallManager extends Manager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        TreeDefinitionManager treeDefinitionManager = this.roseTimber.getManager(TreeDefinitionManager.class);
-        TreeDetectionManager treeDetectionManager = this.roseTimber.getManager(TreeDetectionManager.class);
-        TreeAnimationManager treeAnimationManager = this.roseTimber.getManager(TreeAnimationManager.class);
-        ChoppingManager choppingManager = this.roseTimber.getManager(ChoppingManager.class);
-        SaplingManager saplingManager = this.roseTimber.getManager(SaplingManager.class);
-        HookManager hookManager = this.roseTimber.getManager(HookManager.class);
+        TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
+        TreeDetectionManager treeDetectionManager = this.rosePlugin.getManager(TreeDetectionManager.class);
+        TreeAnimationManager treeAnimationManager = this.rosePlugin.getManager(TreeAnimationManager.class);
+        ChoppingManager choppingManager = this.rosePlugin.getManager(ChoppingManager.class);
+        SaplingManager saplingManager = this.rosePlugin.getManager(SaplingManager.class);
+        HookManager hookManager = this.rosePlugin.getManager(HookManager.class);
 
         Player player = event.getPlayer();
         Block block = event.getBlock();
@@ -97,7 +99,7 @@ public class TreeFallManager extends Manager implements Listener {
             return;
 
         if (alwaysReplantSapling) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this.roseTimber, () ->
+            Bukkit.getScheduler().runTask(this.rosePlugin, () ->
                     saplingManager.replantSapling(detectedTree.getTreeDefinition(), detectedTree.getDetectedTreeBlocks().getInitialLogBlock()));
 
             if (!isValid)

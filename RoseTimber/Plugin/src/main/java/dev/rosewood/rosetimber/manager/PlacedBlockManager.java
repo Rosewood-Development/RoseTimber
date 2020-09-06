@@ -1,6 +1,7 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
@@ -27,9 +28,10 @@ public class PlacedBlockManager extends Manager implements Listener {
     private boolean ignorePlacedBlocks;
     private int maxPlacedBlockMemorySize;
 
-    public PlacedBlockManager(RoseTimber roseTimber) {
-        super(roseTimber);
-        Bukkit.getPluginManager().registerEvents(this, roseTimber);
+    public PlacedBlockManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
+        Bukkit.getPluginManager().registerEvents(this, rosePlugin);
     }
 
     @Override

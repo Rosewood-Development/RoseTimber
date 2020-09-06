@@ -1,6 +1,7 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.hook.CoreProtectHook;
 import dev.rosewood.rosetimber.hook.JobsHook;
 import dev.rosewood.rosetimber.hook.McMMOClassicHook;
@@ -17,10 +18,11 @@ import org.bukkit.plugin.Plugin;
 
 public class HookManager extends Manager {
 
-    private Set<TimberHook> hooks;
+    private final Set<TimberHook> hooks;
 
-    public HookManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public HookManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
         this.hooks = new HashSet<>();
     }
 
@@ -31,17 +33,15 @@ public class HookManager extends Manager {
         this.tryHook("Jobs", JobsHook.class);
         this.tryHook("CoreProtect", CoreProtectHook.class);
 
-        Bukkit.getScheduler().runTaskAsynchronously(this.roseTimber, () -> {
-            Plugin mcMMO = Bukkit.getPluginManager().getPlugin("mcMMO");
-            if (mcMMO != null) {
-                String version = mcMMO.getDescription().getVersion();
-                if (version.startsWith("2")) {
-                    this.tryHook("mcMMO", McMMOHook.class);
-                } else {
-                    this.tryHook("mcMMO", McMMOClassicHook.class);
-                }
+        Plugin mcMMO = Bukkit.getPluginManager().getPlugin("mcMMO");
+        if (mcMMO != null) {
+            String version = mcMMO.getDescription().getVersion();
+            if (version.startsWith("2")) {
+                this.tryHook("mcMMO", McMMOHook.class);
+            } else {
+                this.tryHook("mcMMO", McMMOClassicHook.class);
             }
-        });
+        }
     }
 
     @Override
@@ -61,9 +61,9 @@ public class HookManager extends Manager {
         
         try {
             this.hooks.add(hookClass.newInstance());
-            this.roseTimber.getLogger().info(String.format("Hooks: Hooked into %s!", pluginName));
+            this.rosePlugin.getLogger().info(String.format("Hooks: Hooked into %s!", pluginName));
         } catch (Exception ex) {
-            this.roseTimber.getLogger().info(String.format("Hooks: Unable to hook with %s, the version installed is not supported!", pluginName));
+            this.rosePlugin.getLogger().info(String.format("Hooks: Unable to hook with %s, the version installed is not supported!", pluginName));
         }
     }
     

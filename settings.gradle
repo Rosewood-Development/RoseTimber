@@ -1,7 +1,7 @@
 rootProject.name = 'RoseTimber'
 
-include(':Core')
-project(':Core').projectDir = file('RoseTimber/Core')
+include(':Shared')
+project(':Shared').projectDir = file('RoseTimber/Shared')
 
 include(':Plugin')
 project(':Plugin').projectDir = file('RoseTimber/Plugin')

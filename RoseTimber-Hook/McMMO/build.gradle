@@ -1,4 +1,4 @@
 dependencies {
-    implementation project(':Core')
-    shadow 'com.gmail.nossr50:mcmmo:2.1.129'
+    implementation project(':Shared')
+    shadow 'com.gmail.nossr50:mcmmo:2.1.145'
 }

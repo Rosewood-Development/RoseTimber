@@ -31,7 +31,7 @@ allprojects {
     }
 
     dependencies {
-        shadow 'org.spigotmc:spigot:1.16.1'
+        shadow 'org.spigotmc:spigot:1.16.2'
     }
 }
 
@@ -40,7 +40,7 @@ configurations {
 }
 
 dependencies {
-    implementation project(':Core')
+    implementation project(':Shared')
     implementation project(':Plugin')
 	implementation project(':Jobs')
 	implementation project(':McMMO')
@@ -55,13 +55,10 @@ dependencies {
 shadowJar {
     archiveClassifier.set(null)
 
-    relocate('org.bstats', 'dev.rosewood.rosetimber.libs.bstats')
-    //relocate('co.aikar.commands', 'dev.rosewood.rosetimber.lib.acf.commands')
-    //relocate('co.aikar.locales', 'dev.rosewood.rosetimber.lib.acf.locales')
-    //relocate('co.aikar.timings', 'dev.rosewood.rosetimber.lib.acf.timings')
-    //relocate('co.aikar.util', 'dev.rosewood.rosetimber.lib.acf.util')
+    relocate('dev.rosewood.rosegarden', 'dev.rosewood.rosetimber.lib.rosegarden')
 
-    //exclude 'acf-*.properties'
+    exclude 'dev/rosewood/rosegarden/lib/hikaricp/**/*.class'
+    exclude 'dev/rosewood/rosegarden/lib/slf4j/**/*.class'
 }
 
 jar {

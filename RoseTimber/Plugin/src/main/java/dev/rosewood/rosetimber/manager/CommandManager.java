@@ -1,5 +1,7 @@
 package dev.rosewood.rosetimber.manager;
 
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.RoseTimber;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,10 +16,10 @@ import org.bukkit.util.StringUtil;
 
 public class CommandManager extends Manager implements TabExecutor {
 
-    public CommandManager(RoseTimber plugin) {
-        super(plugin);
+    public CommandManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
 
-        PluginCommand command = plugin.getCommand("rosetimber");
+        PluginCommand command = rosePlugin.getCommand("rosetimber");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
@@ -35,41 +37,45 @@ public class CommandManager extends Manager implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        LocaleManager localeManager = this.roseTimber.getManager(LocaleManager.class);
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        LocaleManager localeManager = this.rosePlugin.getManager(LocaleManager.class);
 
         if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                if (commandSender instanceof Player && this.doesntHavePermission(commandSender, "rosetimber.reload", localeManager))
+            if (args[0].equalsIgnoreCase("help")) {
+                localeManager.sendMessage(sender, "command-help-title");
+                localeManager.sendSimpleMessage(sender, "command-help-description");
+                localeManager.sendSimpleMessage(sender, "command-reload-description");
+                localeManager.sendSimpleMessage(sender, "command-toggle-description");
+            } else if (args[0].equalsIgnoreCase("reload")) {
+                if (sender instanceof Player && this.doesntHavePermission(sender, "rosetimber.reload", localeManager))
                     return true;
 
-                this.roseTimber.reload();
-                localeManager.sendMessage(commandSender, "reload-reloaded");
+                this.rosePlugin.reload();
+                localeManager.sendMessage(sender, "command-reload-reloaded");
                 return true;
             } else if (args[0].equalsIgnoreCase("toggle")) {
-                if (!(commandSender instanceof Player)) {
-                    localeManager.sendCustomMessage(commandSender, "&cConsole cannot toggle chopping mode!");
+                if (!(sender instanceof Player)) {
+                    localeManager.sendCustomMessage(sender, "&cConsole cannot toggle chopping mode!");
                     return true;
                 }
 
-                if (this.doesntHavePermission(commandSender, "rosetimber.toggle", localeManager))
+                if (this.doesntHavePermission(sender, "rosetimber.toggle", localeManager))
                     return true;
 
-                if (RoseTimber.getInstance().getManager(ChoppingManager.class).togglePlayer((Player) commandSender)) {
-                    localeManager.sendMessage(commandSender, "toggle-enabled");
+                if (RoseTimber.getInstance().getManager(ChoppingManager.class).togglePlayer((Player) sender)) {
+                    localeManager.sendMessage(sender, "command-toggle-enabled");
                 } else {
-                    localeManager.sendMessage(commandSender, "toggle-disabled");
+                    localeManager.sendMessage(sender, "command-toggle-disabled");
                 }
 
                 return true;
             }
         }
 
-        commandSender.sendMessage("");
-        localeManager.sendCustomMessage(commandSender, localeManager.getLocaleMessage("prefix") + "&7Plugin created by &5" + this.roseTimber.getDescription().getAuthors().get(0) + "&7. (&ev" + this.roseTimber.getDescription().getVersion() + "&7)");
-        localeManager.sendSimpleMessage(commandSender, "reload-description");
-        localeManager.sendSimpleMessage(commandSender, "toggle-description");
-        commandSender.sendMessage("");
+        String baseColor = localeManager.getLocaleMessage("base-command-color");
+        localeManager.sendCustomMessage(sender, baseColor + "Running <g:#8A2387:#E94057:#F27121>RoseTimber" + baseColor + " v" + this.rosePlugin.getDescription().getVersion());
+        localeManager.sendCustomMessage(sender, baseColor + "Plugin created by: <g:#41e0f0:#ff8dce>" + this.rosePlugin.getDescription().getAuthors().get(0));
+        localeManager.sendSimpleMessage(sender, "base-command-help");
 
         return true;
     }

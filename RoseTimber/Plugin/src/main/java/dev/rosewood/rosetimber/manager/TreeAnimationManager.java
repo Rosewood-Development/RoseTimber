@@ -1,11 +1,12 @@
 package dev.rosewood.rosetimber.manager;
 
-import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.animation.TreeAnimation;
 import dev.rosewood.rosetimber.animation.TreeAnimationCrumble;
 import dev.rosewood.rosetimber.animation.TreeAnimationDisintegrate;
-import dev.rosewood.rosetimber.animation.TreeAnimationTopple;
 import dev.rosewood.rosetimber.animation.TreeAnimationNone;
+import dev.rosewood.rosetimber.animation.TreeAnimationTopple;
 import dev.rosewood.rosetimber.animation.TreeAnimationType;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.DetectedTree;
@@ -24,29 +25,31 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 public class TreeAnimationManager extends Manager implements Listener, Runnable {
 
     private final Set<TreeAnimation> activeAnimations;
-    private int taskId;
+    private BukkitTask task;
 
-    public TreeAnimationManager(RoseTimber roseTimber) {
-        super(roseTimber);
+    public TreeAnimationManager(RosePlugin rosePlugin) {
+        super(rosePlugin);
+
         this.activeAnimations = new HashSet<>();
-        this.taskId = -1;
-        Bukkit.getPluginManager().registerEvents(this, roseTimber);
-        Bukkit.getScheduler().runTaskTimer(this.roseTimber, this, 0, 1L);
+        Bukkit.getPluginManager().registerEvents(this, rosePlugin);
     }
 
     @Override
     public void reload() {
-        this.activeAnimations.clear();
+        this.task = Bukkit.getScheduler().runTaskTimer(this.rosePlugin, this, 0, 1L);
     }
 
     @Override
     public void disable() {
+        if (this.task != null)
+            this.task.cancel();
+
         this.activeAnimations.clear();
-        Bukkit.getScheduler().cancelTask(this.taskId);
     }
 
     @Override
@@ -146,7 +149,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      * @param treeBlock The tree block to impact
      */
     public void runFallingBlockImpact(TreeAnimation treeAnimation, ITreeBlock<FallingBlock> treeBlock) {
-        TreeDefinitionManager treeDefinitionManager = this.roseTimber.getManager(TreeDefinitionManager.class);
+        TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
         boolean useCustomSound = Setting.USE_CUSTOM_SOUNDS.getBoolean();
         boolean useCustomParticles = Setting.USE_CUSTOM_PARTICLES.getBoolean();
         TreeDefinition treeDefinition = treeAnimation.getDetectedTree().getTreeDefinition();
@@ -158,7 +161,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
             treeAnimation.playLandingSound(treeBlock);
 
         treeDefinitionManager.dropTreeLoot(treeDefinition, treeBlock, treeAnimation.getPlayer(), treeAnimation.hasSilkTouch(), false);
-        this.roseTimber.getManager(SaplingManager.class).replantSaplingWithChance(treeDefinition, treeBlock);
+        this.rosePlugin.getManager(SaplingManager.class).replantSaplingWithChance(treeDefinition, treeBlock);
         treeAnimation.getFallingTreeBlocks().remove(treeBlock);
     }
 

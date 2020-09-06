@@ -1,9 +1,9 @@
 package dev.rosewood.rosetimber.tree;
 
+import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosetimber.tree.loot.TreeLoot;
 import dev.rosewood.rosetimber.tree.loot.TreeLootEntry;
 import dev.rosewood.rosetimber.tree.loot.TreeLootPool;
-import dev.rosewood.rosetimber.utils.NMSUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -322,19 +322,21 @@ public class TreeDefinition {
                 false,
                 false,
                 TreeLootPool.empty(),
-                new TreeLootEntry(100, new ItemStack(Material.RED_MUSHROOM), null, -6, 2),
+                new TreeLootPool(
+                        new TreeLootEntry(100, new ItemStack(Material.RED_MUSHROOM), null, -6, 2)
+                ),
                 TreeLootPool.empty(),
                 new ArrayList<>()
         ));
 
         // Nether trees
-        if (NMSUtil.getVersionNumber() > 15) {
+        if (NMSUtil.getVersionNumber() >= 16) {
             treeDefinitions.add(new TreeDefinition(
                     "crimson",
                     Arrays.asList(Material.CRIMSON_STEM, Material.STRIPPED_CRIMSON_STEM, Material.CRIMSON_HYPHAE, Material.STRIPPED_CRIMSON_HYPHAE),
                     Arrays.asList(Material.NETHER_WART_BLOCK, Material.SHROOMLIGHT),
                     Material.CRIMSON_FUNGUS,
-                    Collections.singletonList(Material.CRIMSON_NYLIUM),
+                    Arrays.asList(Material.CRIMSON_NYLIUM, Material.NETHERRACK),
                     2.5,
                     5,
                     true,
@@ -351,7 +353,7 @@ public class TreeDefinition {
                     Arrays.asList(Material.WARPED_STEM, Material.STRIPPED_WARPED_STEM, Material.WARPED_HYPHAE, Material.STRIPPED_WARPED_HYPHAE),
                     Arrays.asList(Material.WARPED_WART_BLOCK, Material.SHROOMLIGHT),
                     Material.WARPED_FUNGUS,
-                    Collections.singletonList(Material.WARPED_NYLIUM),
+                    Arrays.asList(Material.WARPED_NYLIUM, Material.NETHERRACK),
                     2.5,
                     5,
                     true,

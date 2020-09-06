@@ -3,7 +3,7 @@ version: '@version@'
 author: Esophose
 main: dev.rosewood.rosetimber.RoseTimber
 api-version: '1.13'
-softdepend: [mcMMO, Jobs]
+softdepend: [mcMMO, Jobs, PlaceholderAPI]
 commands:
   rosetimber:
     description: Reloads the configuration file
