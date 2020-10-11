@@ -20,13 +20,16 @@ public class TreeDefinition {
     private final double maxLeafDistanceFromLog;
     private final boolean detectLeavesDiagonally;
     private final boolean dropOriginalLog, dropOriginalLeaf;
+    private final boolean scatterTreeBlocksOnGround;
     private final TreeLoot logLoot, leafLoot, entireTreeLoot;
     private final List<ItemStack> requiredTools;
+    private final List<String> treeAnimationTypes;
 
     public TreeDefinition(String key, List<Material> logBlockTypes, List<Material> leafBlockTypes, Material saplingBlockTypes,
                           List<Material> plantableSoilBlockTypes, double maxLogDistanceFromTrunk, double maxLeafDistanceFromLog,
-                          boolean detectLeavesDiagonally, boolean dropOriginalLog, boolean dropOriginalLeaf, TreeLoot logLoot,
-                          TreeLoot leafLoot, TreeLoot entireTreeLoot, List<ItemStack> requiredTools) {
+                          boolean detectLeavesDiagonally, boolean dropOriginalLog, boolean dropOriginalLeaf,
+                          boolean scatterTreeBlocksOnGround, TreeLoot logLoot, TreeLoot leafLoot, TreeLoot entireTreeLoot,
+                          List<ItemStack> requiredTools, List<String> treeAnimationTypes) {
         this.key = key;
         this.logBlockTypes = logBlockTypes;
         this.leafBlockTypes = leafBlockTypes;
@@ -37,10 +40,12 @@ public class TreeDefinition {
         this.detectLeavesDiagonally = detectLeavesDiagonally;
         this.dropOriginalLog = dropOriginalLog;
         this.dropOriginalLeaf = dropOriginalLeaf;
+        this.scatterTreeBlocksOnGround = scatterTreeBlocksOnGround;
         this.logLoot = logLoot;
         this.leafLoot = leafLoot;
         this.entireTreeLoot = entireTreeLoot;
         this.requiredTools = requiredTools;
+        this.treeAnimationTypes = treeAnimationTypes;
     }
 
     /**
@@ -134,6 +139,13 @@ public class TreeDefinition {
     }
 
     /**
+     * @return true if falling tree blocks should scatter on the ground, false otherwise
+     */
+    public boolean shouldScatterTreeBlocksOnGround() {
+        return this.scatterTreeBlocksOnGround;
+    }
+
+    /**
      * @return A TreeLoot entry for the log loot
      */
     public TreeLoot getLogLoot() {
@@ -164,6 +176,13 @@ public class TreeDefinition {
     }
 
     /**
+     * @return the names of the tree animation types
+     */
+    public List<String> getTreeAnimationTypes() {
+        return this.treeAnimationTypes;
+    }
+
+    /**
      * @return a List of default TreeDefinitions
      */
     public static List<TreeDefinition> getDefaultTreeDefinitions() {
@@ -180,6 +199,7 @@ public class TreeDefinition {
                 false,
                 true,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.OAK_SAPLING), null),
@@ -187,7 +207,8 @@ public class TreeDefinition {
                         new TreeLootEntry(0.5, new ItemStack(Material.APPLE), null)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -201,13 +222,15 @@ public class TreeDefinition {
                 false,
                 true,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.SPRUCE_SAPLING), null),
                         new TreeLootEntry(2, new ItemStack(Material.STICK), null, 1, 2)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -221,13 +244,15 @@ public class TreeDefinition {
                 false,
                 true,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.BIRCH_SAPLING), null),
                         new TreeLootEntry(2, new ItemStack(Material.STICK), null, 1, 2)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -241,13 +266,15 @@ public class TreeDefinition {
                 false,
                 true,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(2.5, new ItemStack(Material.JUNGLE_SAPLING), null),
                         new TreeLootEntry(2, new ItemStack(Material.STICK), null, 1, 2)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -261,13 +288,15 @@ public class TreeDefinition {
                 false,
                 true,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.ACACIA_SAPLING), null),
                         new TreeLootEntry(2, new ItemStack(Material.STICK), null)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -281,6 +310,7 @@ public class TreeDefinition {
                 false,
                 true,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.DARK_OAK_SAPLING), null),
@@ -288,7 +318,8 @@ public class TreeDefinition {
                         new TreeLootEntry(0.5, new ItemStack(Material.APPLE), null)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -302,12 +333,14 @@ public class TreeDefinition {
                 false,
                 false,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(100, new ItemStack(Material.BROWN_MUSHROOM), null, -6, 2)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         treeDefinitions.add(new TreeDefinition(
@@ -321,12 +354,14 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                false,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(100, new ItemStack(Material.RED_MUSHROOM), null, -6, 2)
                 ),
                 TreeLootPool.empty(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                Collections.singletonList("TOPPLE")
         ));
 
         // Nether trees
@@ -342,10 +377,12 @@ public class TreeDefinition {
                     true,
                     true,
                     true,
+                    false,
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
-                    new ArrayList<>()
+                    new ArrayList<>(),
+                    Collections.singletonList("TOPPLE")
             ));
 
             treeDefinitions.add(new TreeDefinition(
@@ -359,10 +396,12 @@ public class TreeDefinition {
                     true,
                     true,
                     true,
+                    false,
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
-                    new ArrayList<>()
+                    new ArrayList<>(),
+                    Collections.singletonList("TOPPLE")
             ));
         }
 

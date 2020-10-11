@@ -16,7 +16,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -33,6 +35,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class TreeAnimationManager extends Manager implements Listener, Runnable {
 
+    private final Random random;
     private final Map<String, Constructor<? extends TreeAnimation>> registeredTreeAnimations;
     private final Set<TreeAnimation> activeAnimations;
     private BukkitTask task;
@@ -40,6 +43,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
     public TreeAnimationManager(RosePlugin rosePlugin) {
         super(rosePlugin);
 
+        this.random = new Random();
         this.registeredTreeAnimations = new LinkedHashMap<>();
         this.activeAnimations = new HashSet<>();
         Bukkit.getPluginManager().registerEvents(this, rosePlugin);
@@ -114,7 +118,14 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      * @param player The Player who toppled the tree
      */
     public void runAnimation(DetectedTree detectedTree, Player player) {
-        String animationType = Setting.TREE_ANIMATION_TYPE.getString().toUpperCase();
+        List<String> treeAnimationTypes = detectedTree.getTreeDefinition().getTreeAnimationTypes();
+        String animationType;
+        if (treeAnimationTypes.isEmpty()) {
+            animationType = "TOPPLE";
+        } else {
+            animationType = treeAnimationTypes.get(this.random.nextInt(treeAnimationTypes.size()));
+        }
+
         Constructor<? extends TreeAnimation> treeAnimationConstructor = this.registeredTreeAnimations.get(animationType);
         if (treeAnimationConstructor == null)
             treeAnimationConstructor = this.registeredTreeAnimations.values().iterator().next();
@@ -202,26 +213,24 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
             return;
 
         FallingBlock fallingBlock = (FallingBlock) event.getEntity();
-        if (!this.isBlockInAnimation(fallingBlock))
+        TreeAnimation treeAnimation = this.getAnimationForBlock(fallingBlock);
+        if (treeAnimation == null)
             return;
 
-        TreeAnimation treeAnimation = this.getAnimationForBlock(fallingBlock);
         if (Setting.FALLING_BLOCKS_DEAL_DAMAGE.getBoolean()) {
             int damage = Setting.FALLING_BLOCK_DAMAGE.getInt();
             for (Entity entity : fallingBlock.getNearbyEntities(0.5, 0.5, 0.5)) {
                 if (!(entity instanceof Damageable))
                     continue;
 
-                Entity damageSource = treeAnimation == null ? fallingBlock : treeAnimation.getPlayer();
+                Entity damageSource = treeAnimation.getPlayer();
                 ((Damageable) entity).damage(damage, damageSource);
             }
         }
 
-        if (Setting.SCATTER_TREE_BLOCKS_ON_GROUND.getBoolean()) {
-            if (treeAnimation != null) {
-                treeAnimation.removeFallingBlock(fallingBlock);
-                return;
-            }
+        if (treeAnimation.getDetectedTree().getTreeDefinition().shouldScatterTreeBlocksOnGround()) {
+            treeAnimation.removeFallingBlock(fallingBlock);
+            return;
         }
 
         event.setCancelled(true);

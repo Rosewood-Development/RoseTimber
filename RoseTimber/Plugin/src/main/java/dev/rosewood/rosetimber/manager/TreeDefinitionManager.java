@@ -4,6 +4,7 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.config.CommentedConfigurationSection;
 import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
 import dev.rosewood.rosegarden.manager.Manager;
+import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
@@ -67,8 +68,10 @@ public class TreeDefinitionManager extends Manager {
             boolean detectLeavesDiagonally;
             boolean dropOriginalLog;
             boolean dropOriginalLeaf;
+            boolean scatterTreeBlocksOnGround;
             TreeLoot logLoot, leafLoot, entireTreeLoot;
             List<ItemStack> requiredTools = new ArrayList<>();
+            List<String> treeAnimationTypes;
 
             for (String blockDataString : tree.getStringList("logs"))
                 logBlockTypes.add(Material.matchMaterial(blockDataString));
@@ -86,6 +89,7 @@ public class TreeDefinitionManager extends Manager {
             detectLeavesDiagonally = tree.getBoolean("search-for-leaves-diagonally");
             dropOriginalLog = tree.getBoolean("drop-original-log");
             dropOriginalLeaf = tree.getBoolean("drop-original-leaf");
+            scatterTreeBlocksOnGround = tree.getBoolean("scatter-tree-blocks-on-ground");
 
             ConfigurationSection logLootSection = tree.getConfigurationSection("log-loot");
             if (logLootSection != null) {
@@ -111,8 +115,11 @@ public class TreeDefinitionManager extends Manager {
             for (String itemStackString : tree.getStringList("required-tools"))
                 requiredTools.add(new ItemStack(Material.matchMaterial(itemStackString)));
 
+            treeAnimationTypes = tree.getStringList("tree-animation-types");
+
             this.treeDefinitions.add(new TreeDefinition(key, logBlockTypes, leafBlockTypes, saplingBlockType, plantableSoilBlockTypes, maxLogDistanceFromTrunk,
-                    maxLeafDistanceFromLog, detectLeavesDiagonally, dropOriginalLog, dropOriginalLeaf, logLoot, leafLoot, entireTreeLoot, requiredTools));
+                    maxLeafDistanceFromLog, detectLeavesDiagonally, dropOriginalLog, dropOriginalLeaf, scatterTreeBlocksOnGround, logLoot, leafLoot,
+                    entireTreeLoot, requiredTools, treeAnimationTypes));
         }
 
         // Load global plantable soil
@@ -165,7 +172,8 @@ public class TreeDefinitionManager extends Manager {
                 "Tree configuration",
                 "Allows for extreme fine-tuning of tree detection and what are considered trees",
                 "Multiple log and leaf types are allowed, only one sapling type is allowed",
-                "You can add your own custom tree types here, just add a new section"
+                "You can add your own custom tree types here, just add a new section",
+                "Tree animation types: " + String.join(", ", RoseTimber.getInstance().getManager(TreeAnimationManager.class).getRegisteredTreeAnimationNames())
         );
 
         CommentedConfigurationSection treeSection = config.createSection("trees");
@@ -180,10 +188,12 @@ public class TreeDefinitionManager extends Manager {
             definitionSection.set("search-for-leaves-diagonally", treeDefinition.shouldDetectLeavesDiagonally());
             definitionSection.set("drop-original-log", treeDefinition.shouldDropOriginalLog());
             definitionSection.set("drop-original-leaf", treeDefinition.shouldDropOriginalLeaf());
+            definitionSection.set("scatter-tree-blocks-on-ground", treeDefinition.shouldScatterTreeBlocksOnGround());
             this.writeTreeLootToSection(definitionSection, "log-loot", treeDefinition.getLogLoot());
             this.writeTreeLootToSection(definitionSection, "leaf-loot", treeDefinition.getLeafLoot());
             this.writeTreeLootToSection(definitionSection, "entire-tree-loot", treeDefinition.getEntireTreeLoot());
             definitionSection.set("required-tools", treeDefinition.getRequiredTools().stream().map(ItemStack::getType).map(Enum::name).collect(Collectors.toList()));
+            definitionSection.set("tree-animation-types", treeDefinition.getTreeAnimationTypes());
         }
 
         config.set(

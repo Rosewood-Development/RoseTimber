@@ -46,11 +46,7 @@ public class ConfigurationManager extends AbstractConfigurationManager {
         IGNORE_PLACED_BLOCKS_MEMORY_SIZE("ignore-placed-blocks-memory-size", 5000, "The maximum number of blocks to keep track of in memory at once", "Use a lower number if this starts to take up too much memory or trees start taking too long to detect"),
         HOOKS_APPLY_EXPERIENCE("hooks-apply-experience", true, "Applies experience when using Jobs/mcMMO", "Only does something if Jobs or mcMMO is installed"),
         HOOKS_APPLY_EXTRA_DROPS("hooks-apply-extra-drops", true, "Applies extra drops passive ability when using mcMMO", "Only does something if mcMMO is installed"),
-        HOOKS_REQUIRE_ABILITY_ACTIVE("hooks-require-ability-active", false, "Requires the tree feller ability in mcMMO to be active to use timber", "Only does something if mcMMO is installed"),
-
-        // TODO: Move these two settings to the tree definitions
-        TREE_ANIMATION_TYPE("tree-animation-type", "TOPPLE", "The type of animation to use for tree toppling", "Types: " + String.join(", ", RoseTimber.getInstance().getManager(TreeAnimationManager.class).getRegisteredTreeAnimationNames())),
-        SCATTER_TREE_BLOCKS_ON_GROUND("scatter-tree-blocks-on-ground", false, "If the tree-animation-type is TOPPLE or CRUMBLE, make the blocks stick to the ground", "Does nothing for tree animation types that don't have falling blocks");
+        HOOKS_REQUIRE_ABILITY_ACTIVE("hooks-require-ability-active", false, "Requires the tree feller ability in mcMMO to be active to use timber", "Only does something if mcMMO is installed");
 
         private final String key;
         private final Object defaultValue;
