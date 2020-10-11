@@ -21,7 +21,7 @@ import org.bukkit.util.Vector;
 public class TreeAnimationDisintegrate extends TreeAnimation {
 
     public TreeAnimationDisintegrate(DetectedTree detectedTree, Player player) {
-        super(TreeAnimationType.DISINTEGRATE, detectedTree, player);
+        super(detectedTree, player);
     }
 
     @Override

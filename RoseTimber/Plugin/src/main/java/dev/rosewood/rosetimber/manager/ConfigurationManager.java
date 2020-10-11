@@ -5,7 +5,6 @@ import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
 import dev.rosewood.rosegarden.config.RoseSetting;
 import dev.rosewood.rosegarden.manager.AbstractConfigurationManager;
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.animation.TreeAnimationType;
 import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -50,8 +49,8 @@ public class ConfigurationManager extends AbstractConfigurationManager {
         HOOKS_REQUIRE_ABILITY_ACTIVE("hooks-require-ability-active", false, "Requires the tree feller ability in mcMMO to be active to use timber", "Only does something if mcMMO is installed"),
 
         // TODO: Move these two settings to the tree definitions
-        TREE_ANIMATION_TYPE("tree-animation-type", "TOPPLE", "The type of animation to use for tree toppling", "Types: " + Stream.of(TreeAnimationType.values()).map(Enum::name).collect(Collectors.joining(", "))),
-        SCATTER_TREE_BLOCKS_ON_GROUND("scatter-tree-blocks-on-ground", false, "If the tree-animation-type is TOPPLE or CRUMBLE, make the blocks stick to the ground", "Does nothing if tree-animation-type is not TOPPLE or CRUMBLE");
+        TREE_ANIMATION_TYPE("tree-animation-type", "TOPPLE", "The type of animation to use for tree toppling", "Types: " + String.join(", ", RoseTimber.getInstance().getManager(TreeAnimationManager.class).getRegisteredTreeAnimationNames())),
+        SCATTER_TREE_BLOCKS_ON_GROUND("scatter-tree-blocks-on-ground", false, "If the tree-animation-type is TOPPLE or CRUMBLE, make the blocks stick to the ground", "Does nothing for tree animation types that don't have falling blocks");
 
         private final String key;
         private final Object defaultValue;

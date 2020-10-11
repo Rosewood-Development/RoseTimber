@@ -17,22 +17,22 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public abstract class TreeAnimation {
 
-    protected final TreeAnimationType treeAnimationType;
     protected final DetectedTree detectedTree;
     protected final Player player;
     protected final boolean hasSilkTouch;
     protected TreeBlockSet<FallingBlock> fallingTreeBlocks;
 
-    TreeAnimation(TreeAnimationType treeAnimationType, DetectedTree detectedTree, Player player) {
-        this.treeAnimationType = treeAnimationType;
+    TreeAnimation(DetectedTree detectedTree, Player player) {
         this.detectedTree = detectedTree;
         this.player = player;
 
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
-        this.hasSilkTouch = itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH);
+        ItemMeta itemMeta = itemInHand.getItemMeta();
+        this.hasSilkTouch = itemMeta != null && itemMeta.hasEnchant(Enchantment.SILK_TOUCH);
 
         this.fallingTreeBlocks = new TreeBlockSet<>(); // Should be overridden in any subclasses that need to use it
     }
@@ -43,13 +43,6 @@ public abstract class TreeAnimation {
      * @param whenFinished The runnable to run when the animation is done
      */
     public abstract void playAnimation(Runnable whenFinished);
-
-    /**
-     * @return the TreeAnimationType of this animation
-     */
-    public TreeAnimationType getTreeAnimationType() {
-        return this.treeAnimationType;
-    }
 
     /**
      * @return the detected tree

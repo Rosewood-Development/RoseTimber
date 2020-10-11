@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
 public class TreeAnimationTopple extends TreeAnimation {
 
     public TreeAnimationTopple(DetectedTree detectedTree, Player player) {
-        super(TreeAnimationType.TOPPLE, detectedTree, player);
+        super(detectedTree, player);
     }
 
     @Override

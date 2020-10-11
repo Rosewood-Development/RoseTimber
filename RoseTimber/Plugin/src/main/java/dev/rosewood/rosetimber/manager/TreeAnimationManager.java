@@ -7,12 +7,16 @@ import dev.rosewood.rosetimber.animation.TreeAnimationCrumble;
 import dev.rosewood.rosetimber.animation.TreeAnimationDisintegrate;
 import dev.rosewood.rosetimber.animation.TreeAnimationNone;
 import dev.rosewood.rosetimber.animation.TreeAnimationTopple;
-import dev.rosewood.rosetimber.animation.TreeAnimationType;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -29,14 +33,22 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class TreeAnimationManager extends Manager implements Listener, Runnable {
 
+    private final Map<String, Constructor<? extends TreeAnimation>> registeredTreeAnimations;
     private final Set<TreeAnimation> activeAnimations;
     private BukkitTask task;
 
     public TreeAnimationManager(RosePlugin rosePlugin) {
         super(rosePlugin);
 
+        this.registeredTreeAnimations = new LinkedHashMap<>();
         this.activeAnimations = new HashSet<>();
         Bukkit.getPluginManager().registerEvents(this, rosePlugin);
+
+        // Register default tree animations
+        this.registerTreeAnimation("NONE", TreeAnimationNone.class);
+        this.registerTreeAnimation("TOPPLE", TreeAnimationTopple.class);
+        this.registerTreeAnimation("DISINTEGRATE", TreeAnimationDisintegrate.class);
+        this.registerTreeAnimation("CRUMBLE", TreeAnimationCrumble.class);
     }
 
     @Override
@@ -70,26 +82,53 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
     }
 
     /**
+     * Registers a new tree animation type
+     *
+     * @param animationName The name of the tree animation, must be unique
+     * @param treeAnimationClass The class of the tree animation
+     * @return true if the animation was successfully registered, otherwise false
+     */
+    public boolean registerTreeAnimation(String animationName, Class<? extends TreeAnimation> treeAnimationClass) {
+        String name = animationName.toUpperCase();
+        if (this.registeredTreeAnimations.keySet().stream().anyMatch(name::equals))
+            return false;
+
+        try {
+            // Make sure this constructor exists so we can actually create new instances of the class
+            Constructor<? extends TreeAnimation> constructor = treeAnimationClass.getConstructor(DetectedTree.class, Player.class);
+            this.registeredTreeAnimations.put(name, constructor);
+            return true;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
+    public Collection<String> getRegisteredTreeAnimationNames() {
+        return Collections.unmodifiableCollection(this.registeredTreeAnimations.keySet());
+    }
+
+    /**
      * Plays an animation for toppling a tree
      *
      * @param detectedTree The DetectedTree
      * @param player The Player who toppled the tree
      */
     public void runAnimation(DetectedTree detectedTree, Player player) {
-        switch (TreeAnimationType.fromString(Setting.TREE_ANIMATION_TYPE.getString())) {
-            case TOPPLE:
-                this.registerTreeAnimation(new TreeAnimationTopple(detectedTree, player));
-                break;
-            case DISINTEGRATE:
-                this.registerTreeAnimation(new TreeAnimationDisintegrate(detectedTree, player));
-                break;
-            case CRUMBLE:
-                this.registerTreeAnimation(new TreeAnimationCrumble(detectedTree, player));
-                break;
-            case NONE:
-                this.registerTreeAnimation(new TreeAnimationNone(detectedTree, player));
-                break;
+        String animationType = Setting.TREE_ANIMATION_TYPE.getString().toUpperCase();
+        Constructor<? extends TreeAnimation> treeAnimationConstructor = this.registeredTreeAnimations.get(animationType);
+        if (treeAnimationConstructor == null)
+            treeAnimationConstructor = this.registeredTreeAnimations.values().iterator().next();
+
+        TreeAnimation treeAnimation;
+        try {
+            treeAnimation = treeAnimationConstructor.newInstance(detectedTree, player);
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+            return;
         }
+
+        this.activeAnimations.add(treeAnimation);
+        treeAnimation.playAnimation(() -> this.activeAnimations.remove(treeAnimation));
     }
 
     /**
@@ -132,14 +171,6 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
                 if (treeBlock.getBlock().equals(fallingBlock))
                     return treeAnimation;
         return null;
-    }
-
-    /**
-     * Registers and runs a tree animation
-     */
-    private void registerTreeAnimation(TreeAnimation treeAnimation) {
-        this.activeAnimations.add(treeAnimation);
-        treeAnimation.playAnimation(() -> this.activeAnimations.remove(treeAnimation));
     }
 
     /**

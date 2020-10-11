@@ -6,7 +6,6 @@ import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.FallingTreeBlock;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlock;
-import dev.rosewood.rosetimber.tree.TreeBlockSet;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import org.bukkit.util.Vector;
 public class TreeAnimationCrumble extends TreeAnimation {
 
     public TreeAnimationCrumble(DetectedTree detectedTree, Player player) {
-        super(TreeAnimationType.CRUMBLE, detectedTree, player);
+        super(detectedTree, player);
     }
 
     @Override
@@ -74,9 +73,6 @@ public class TreeAnimationCrumble extends TreeAnimation {
                         fallingTreeBlock.getBlock().setGravity(true);
                         fallingTreeBlock.getBlock().setVelocity(Vector.getRandom().setY(0).subtract(new Vector(0.5, 0, 0.5)).multiply(0.15));
                         TreeAnimationCrumble.this.fallingTreeBlocks.add(fallingTreeBlock);
-
-                        if (TreeAnimationCrumble.this.fallingTreeBlocks == null)
-                            TreeAnimationCrumble.this.fallingTreeBlocks = new TreeBlockSet<>(fallingTreeBlock);
 
                         if (useCustomSound)
                             TreeAnimationCrumble.this.playLandingSound(fallingTreeBlock);

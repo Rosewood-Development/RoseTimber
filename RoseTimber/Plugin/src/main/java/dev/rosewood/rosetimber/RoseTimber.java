@@ -43,7 +43,7 @@ public class RoseTimber extends RosePlugin {
     @Override
     public void enable() {
         if (NMSUtil.getVersionNumber() < 13) {
-            this.getLogger().severe("This version of RoseTimber only supports 1.13.2 and above. The plugin has been disabled.");
+            this.getLogger().severe("RoseTimber only supports 1.13.2 and above. The plugin has been disabled.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }
@@ -69,7 +69,7 @@ public class RoseTimber extends RosePlugin {
     }
 
     @Override
-    public List<DataMigration> getDataMigrations() {
+    public List<Class<? extends DataMigration>> getDataMigrations() {
         return Collections.emptyList();
     }
 

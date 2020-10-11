@@ -20,7 +20,7 @@ dependencies {
     implementation project(':McMMOClassic')
 
     // From our repo
-    implementation 'dev.rosewood:rosegarden:1.0.3-SNAPSHOT'
+    implementation 'dev.rosewood:rosegarden:1.0.4'
 }
 
 processResources {
