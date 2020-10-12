@@ -34,7 +34,7 @@ public class SaplingManager extends Manager {
 
     @Override
     public void disable() {
-
+        this.protectedSaplings.clear();
     }
 
     /**

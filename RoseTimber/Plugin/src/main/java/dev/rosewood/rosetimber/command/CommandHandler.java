@@ -1,39 +1,25 @@
-package dev.rosewood.rosetimber.manager;
+package dev.rosewood.rosetimber.command;
 
 import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.RoseTimber;
+import dev.rosewood.rosetimber.manager.ChoppingManager;
+import dev.rosewood.rosetimber.manager.LocaleManager;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-public class CommandManager extends Manager implements TabExecutor {
+public class CommandHandler implements TabExecutor {
 
-    public CommandManager(RosePlugin rosePlugin) {
-        super(rosePlugin);
+    private final RosePlugin rosePlugin;
 
-        PluginCommand command = rosePlugin.getCommand("rosetimber");
-        if (command != null) {
-            command.setExecutor(this);
-            command.setTabCompleter(this);
-        }
-    }
-
-    @Override
-    public void reload() {
-
-    }
-
-    @Override
-    public void disable() {
-
+    public CommandHandler(RosePlugin rosePlugin) {
+        this.rosePlugin = rosePlugin;
     }
 
     @Override
@@ -62,7 +48,7 @@ public class CommandManager extends Manager implements TabExecutor {
                 if (this.doesntHavePermission(sender, "rosetimber.toggle", localeManager))
                     return true;
 
-                if (RoseTimber.getInstance().getManager(ChoppingManager.class).togglePlayer((Player) sender)) {
+                if (this.rosePlugin.getManager(ChoppingManager.class).togglePlayer((Player) sender)) {
                     localeManager.sendMessage(sender, "command-toggle-enabled");
                 } else {
                     localeManager.sendMessage(sender, "command-toggle-disabled");

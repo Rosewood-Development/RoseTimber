@@ -1,10 +1,15 @@
-package dev.rosewood.rosetimber.manager;
+package dev.rosewood.rosetimber.listener;
 
 import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.events.TreeFallEvent;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
+import dev.rosewood.rosetimber.manager.ChoppingManager;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.manager.HookManager;
+import dev.rosewood.rosetimber.manager.SaplingManager;
+import dev.rosewood.rosetimber.manager.TreeAnimationManager;
+import dev.rosewood.rosetimber.manager.TreeDefinitionManager;
+import dev.rosewood.rosetimber.manager.TreeDetectionManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
@@ -21,25 +26,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class TreeFallManager extends Manager implements Listener {
+public class TreeFallListener implements Listener {
 
-    public TreeFallManager(RosePlugin rosePlugin) {
-        super(rosePlugin);
+    private final RosePlugin rosePlugin;
 
-        Bukkit.getPluginManager().registerEvents(this, rosePlugin);
+    public TreeFallListener(RosePlugin rosePlugin) {
+        this.rosePlugin = rosePlugin;
     }
 
-    @Override
-    public void reload() {
-
-    }
-
-    @Override
-    public void disable() {
-
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
         TreeDetectionManager treeDetectionManager = this.rosePlugin.getManager(TreeDetectionManager.class);
