@@ -54,36 +54,19 @@ public class TreeFallListener implements Listener {
         }
 
         // Condition checks
-        boolean isValid = true;
-
-        if (Setting.DISABLED_WORLDS.getStringList().contains(player.getWorld().getName()))
-            isValid = false;
-
-        if (!Setting.ALLOW_CREATIVE_MODE.getBoolean() && player.getGameMode().equals(GameMode.CREATIVE))
-            isValid = false;
-
-        if (!this.checkToppleWhile(player))
-            isValid = false;
-
-        if (Setting.REQUIRE_CHOP_PERMISSION.getBoolean() && !player.hasPermission("rosetimber.chop"))
-            isValid = false;
-
-        if (!choppingManager.isChopping(player))
-            isValid = false;
-
-        if (choppingManager.isInCooldown(player))
-            isValid = false;
+        boolean isValid = !Setting.DISABLED_WORLDS.getStringList().contains(player.getWorld().getName())
+                && (Setting.ALLOW_CREATIVE_MODE.getBoolean() || !player.getGameMode().equals(GameMode.CREATIVE))
+                && this.checkToppleWhile(player)
+                && (!Setting.REQUIRE_CHOP_PERMISSION.getBoolean() || player.hasPermission("rosetimber.chop"))
+                && choppingManager.isChopping(player)
+                && !choppingManager.isInCooldown(player)
+                && treeDefinitionManager.isToolValidForAnyTreeDefinition(tool)
+                && hookManager.isUsingAbilityHooks(player);
 
         if (treeAnimationManager.isBlockInAnimation(block)) {
             isValid = false;
             event.setCancelled(true);
         }
-
-        if (!treeDefinitionManager.isToolValidForAnyTreeDefinition(tool))
-            isValid = false;
-
-        if (!hookManager.isUsingAbilityHooks(player))
-            isValid = false;
 
         boolean alwaysReplantSapling = Setting.ALWAYS_REPLANT_SAPLING.getBoolean();
         if (!isValid && !alwaysReplantSapling)
@@ -154,6 +137,13 @@ public class TreeFallListener implements Listener {
         }
     }
 
+    /**
+     * Gets the amount of damage that should be applied to the tool
+     *
+     * @param treeBlocks The tree blocks that were detected
+     * @param hasSilkTouch true if the tool has silk touch, false otherwise
+     * @return The amount of damage to apply to the tool
+     */
     private int getToolDamage(TreeBlockSet<Block> treeBlocks, boolean hasSilkTouch) {
         if (!Setting.REALISTIC_TOOL_DAMAGE.getBoolean())
             return 1;

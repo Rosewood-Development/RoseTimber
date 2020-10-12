@@ -4,6 +4,7 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.config.CommentedConfigurationSection;
 import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
 import dev.rosewood.rosegarden.manager.Manager;
+import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
@@ -30,10 +31,10 @@ public class TreeDefinitionManager extends Manager {
 
     private static final String FILE_NAME = "tree-definitions.yml";
 
-    private List<TreeDefinition> treeDefinitions;
-    private List<Material> globalPlantableSoil;
+    private final List<TreeDefinition> treeDefinitions;
+    private final List<Material> globalPlantableSoil;
     private TreeLoot globalLogLoot, globalLeafLoot, globalEntireTreeLoot;
-    private List<ItemStack> globalRequiredTools;
+    private final List<ItemStack> globalRequiredTools;
 
     public TreeDefinitionManager(RosePlugin rosePlugin) {
         super(rosePlugin);
@@ -208,7 +209,7 @@ public class TreeDefinitionManager extends Manager {
                 "To add more, increment the number by 1",
                 "The chance is out of 100 and can contain decimals",
                 "The default examples here are to show what you can do with custom loot",
-                "Valid command placeholders: %player%, %type%, %xPos%, %yPos%, %zPos%"
+                "Valid command placeholders: %player%, %type%, %xPos%, %yPos%, %zPos%, %world%"
         );
         this.writeTreeLootToSection(config, "global-log-loot", TreeDefinition.getDefaultGlobalLogLoot());
 
@@ -217,7 +218,7 @@ public class TreeDefinitionManager extends Manager {
                 "The loot applies to each leaf broken in the tree",
                 "To add more, increment the number by 1",
                 "The chance is out of 100 and can contain decimals",
-                "Valid command placeholders: %player%, %type%, %xPos%, %yPos%, %zPos%"
+                "Valid command placeholders: %player%, %type%, %xPos%, %yPos%, %zPos%, %world%"
         );
         this.writeTreeLootToSection(config, "global-leaf-loot", TreeDefinition.getDefaultGlobalLeafLoot());
 
@@ -226,7 +227,7 @@ public class TreeDefinitionManager extends Manager {
                 "The loot will be dropped only one time for the entire tree",
                 "To add more, increment the number by 1",
                 "The chance is out of 100 and can contain decimals",
-                "Valid command placeholders: %player%, %type%, %xPos%, %yPos%, %zPos%"
+                "Valid command placeholders: %player%, %type%, %xPos%, %yPos%, %zPos%, %world%"
         );
         this.writeTreeLootToSection(config, "global-entire-tree-loot", TreeDefinition.getDefaultGlobalEntireTreeLoot());
 
@@ -447,13 +448,17 @@ public class TreeDefinitionManager extends Manager {
         }
 
         // Run looted commands
-        for (String lootedCommand : lootedCommands)
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-                    lootedCommand.replace("%player%", player.getName())
-                                 .replace("%type%", treeDefinition.getKey())
-                                 .replace("%xPos%", treeBlock.getLocation().getBlockX() + "")
-                                 .replace("%yPos%", treeBlock.getLocation().getBlockY() + "")
-                                 .replace("%zPos%", treeBlock.getLocation().getBlockZ() + ""));
+        StringPlaceholders placeholders = StringPlaceholders.builder("player", player.getName())
+                .addPlaceholder("type", treeDefinition.getKey())
+                .addPlaceholder("xPos", treeBlock.getLocation().getBlockX())
+                .addPlaceholder("yPos", treeBlock.getLocation().getBlockY())
+                .addPlaceholder("zPos", treeBlock.getLocation().getBlockZ())
+                .addPlaceholder("world", treeBlock.getWorld().getName())
+                .build();
+
+        lootedCommands.stream()
+                .map(placeholders::apply)
+                .forEach(x -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), x));
     }
 
     /**

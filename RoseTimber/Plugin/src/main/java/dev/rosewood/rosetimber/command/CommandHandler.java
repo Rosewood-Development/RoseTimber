@@ -1,7 +1,6 @@
 package dev.rosewood.rosetimber.command;
 
 import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.manager.ChoppingManager;
 import dev.rosewood.rosetimber.manager.LocaleManager;
 import java.util.ArrayList;

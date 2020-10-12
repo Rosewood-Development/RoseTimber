@@ -4,6 +4,7 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.database.DataMigration;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
+import dev.rosewood.rosetimber.command.CommandHandler;
 import dev.rosewood.rosetimber.listener.TreeFallListener;
 import dev.rosewood.rosetimber.manager.ChoppingManager;
 import dev.rosewood.rosetimber.manager.ConfigurationManager;
@@ -49,10 +50,8 @@ public class RoseTimber extends RosePlugin {
         }
 
         PluginCommand command = this.getCommand("rosetimber");
-        if (command != null) {
-            command.setExecutor(this);
-            command.setTabCompleter(this);
-        }
+        if (command != null)
+            command.setExecutor(new CommandHandler(this));
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new TreeFallListener(this), this);

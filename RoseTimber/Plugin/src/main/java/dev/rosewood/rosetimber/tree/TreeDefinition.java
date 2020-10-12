@@ -422,7 +422,7 @@ public class TreeDefinition {
         return new TreeLootPool(
                 new TreeLootEntry(0, new ItemStack(Material.DIAMOND), null),
                 new TreeLootEntry(0, null, "eco give %player% 5"),
-                new TreeLootEntry(0, new ItemStack(Material.GOLDEN_APPLE), "broadcast %player% found a golden apple in a %type% tree at %xPos% %yPos% %zPos%!")
+                new TreeLootEntry(0, new ItemStack(Material.GOLDEN_APPLE), "broadcast %player% found a golden apple in a %type% tree at %xPos% %yPos% %zPos% in %world%!")
         );
     }
 
