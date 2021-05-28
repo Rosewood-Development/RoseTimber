@@ -5,14 +5,13 @@ import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 
-public class FallingTreeBlock implements ITreeBlock<FallingBlock> {
+public class FallingTreeBlock extends ITreeBlock<FallingBlock> {
 
     private final FallingBlock fallingBlock;
-    private final TreeBlockType treeBlockType;
 
     public FallingTreeBlock(FallingBlock fallingBlock, TreeBlockType treeBlockType) {
+        super(treeBlockType);
         this.fallingBlock = fallingBlock;
-        this.treeBlockType = treeBlockType;
     }
 
     @Override
@@ -33,11 +32,6 @@ public class FallingTreeBlock implements ITreeBlock<FallingBlock> {
     @Override
     public Location getLocation() {
         return this.fallingBlock.getLocation();
-    }
-
-    @Override
-    public TreeBlockType getTreeBlockType() {
-        return this.treeBlockType;
     }
 
 }

@@ -95,7 +95,9 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
 
     @Override
     public boolean remove(Object o) {
-        if (!(o instanceof ITreeBlock)) return false;
+        if (!(o instanceof ITreeBlock))
+            return false;
+
         ITreeBlock<?> treeBlock = (ITreeBlock<?>) o;
         switch (treeBlock.getTreeBlockType()) {
             case LOG:
@@ -103,6 +105,7 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
             case LEAF:
                 return this.leafBlocks.remove(treeBlock);
         }
+
         return false;
     }
 

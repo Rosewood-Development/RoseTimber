@@ -10,7 +10,7 @@ import dev.rosewood.rosetimber.tree.TreeBlockSet;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -102,7 +102,7 @@ public class TreeDetectionManager extends Manager {
         }
 
         // Lowest blocks at the front of the list
-        Collections.reverse(trunkBlocks);
+        trunkBlocks.sort(Comparator.comparingInt(x -> x.getLocation().getBlockY()));
 
         // Detect branches off the main trunk
         for (Block trunkBlock : trunkBlocks)

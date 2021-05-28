@@ -1,34 +1,56 @@
 package dev.rosewood.rosetimber.tree;
 
+import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 
-public interface ITreeBlock<BlockType> {
+public abstract class ITreeBlock<T> {
+
+    protected final TreeBlockType treeBlockType;
+
+    public ITreeBlock(TreeBlockType treeBlockType) {
+        this.treeBlockType = treeBlockType;
+    }
+
+    /**
+     * @return The TreeBlockType of this TreeBlock
+     */
+    public TreeBlockType getTreeBlockType() {
+        return this.treeBlockType;
+    }
 
     /**
      * @return the Block of this TreeBlock
      */
-    BlockType getBlock();
+    public abstract T getBlock();
 
     /**
      * @return the BlockData of this TreeBlock
      */
-    BlockData getBlockData();
+    public abstract BlockData getBlockData();
 
     /**
      * @return the World of this TreeBlock
      */
-    World getWorld();
+    public abstract World getWorld();
 
     /**
      * @return the Location of this TreeBlock
      */
-    Location getLocation();
+    public abstract Location getLocation();
 
-    /**
-     * @return The TreeBlockType of this TreeBlockType
-     */
-    TreeBlockType getTreeBlockType();
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getBlock(), this.treeBlockType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ITreeBlock)) return false;
+        if (o == this) return true;
+        ITreeBlock<?> other = (ITreeBlock<?>) o;
+        return other.getBlock().equals(this.getBlock()) && other.getTreeBlockType().equals(this.getTreeBlockType());
+    }
 
 }

@@ -21,7 +21,7 @@ permissions:
     description: Allows players to trigger the trees toppling down effect
     default: op
   rosetimber.bonusloot:
-    description: Doubles the loot obtained from trees
+    description: Applies a tree loot multiplier
     default: op
   rosetimber.reload:
     description: Reloads the configuration file

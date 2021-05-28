@@ -16,7 +16,7 @@ public class CoreProtectHook implements TimberHook {
     }
 
     @Override
-    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks) {
+    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singlular) {
         if (!this.api.isEnabled())
             return;
 

@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 public class McMMOHook implements TimberHook {
 
     @Override
-    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks) {
+    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular) {
         if (player.getGameMode().equals(GameMode.CREATIVE))
             return;
 

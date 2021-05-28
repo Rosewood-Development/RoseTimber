@@ -86,7 +86,7 @@ public class CommandHandler implements TabExecutor {
     }
 
     /**
-     * Checks if a player does have a permission
+     * Checks if a player doesn't have a permission.
      * Sends them an error message if they don't
      *
      * @param sender     The CommandSender to check

@@ -13,18 +13,21 @@ import org.bukkit.entity.Player;
 public class JobsHook implements TimberHook {
 
     @Override
-    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks) {
+    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular) {
         if (player.getGameMode().equals(GameMode.CREATIVE)) 
             return;
 
         JobsPlayer jPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
         if (jPlayer == null) 
             return;
-        
+
         for (ITreeBlock<Block> treeBlock : treeBlocks.getLogBlocks()) {
             Block block = treeBlock.getBlock();
             BlockActionInfo bInfo = new BlockActionInfo(block, ActionType.BREAK);
             Jobs.action(jPlayer, bInfo, block);
+
+            if (singular)
+                break;
         }
     }
 

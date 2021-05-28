@@ -74,11 +74,14 @@ public class HookManager extends Manager {
      * @param treeBlocks The blocks of the tree that were broken
      */
     public void applyExperienceHooks(Player player, TreeBlockSet<Block> treeBlocks) {
-        if (!Setting.HOOKS_APPLY_EXPERIENCE.getBoolean())
-            return;
-
-        for (TimberHook hook : this.hooks)
-            hook.applyExperience(player, treeBlocks);
+        for (TimberHook hook : this.hooks) {
+            if (hook instanceof JobsHook) {
+                hook.applyExperience(player, treeBlocks, !Setting.HOOKS_JOBS_APPLY_EXPERIENCE.getBoolean());
+            } else { // mcMMO
+                if (Setting.HOOKS_MCMMO_APPLY_EXPERIENCE.getBoolean())
+                    hook.applyExperience(player, treeBlocks, false);
+            }
+        }
     }
 
     /**

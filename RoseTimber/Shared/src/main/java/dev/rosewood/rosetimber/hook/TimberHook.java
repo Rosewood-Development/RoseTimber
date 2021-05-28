@@ -11,8 +11,9 @@ public interface TimberHook {
      *
      * @param player The player
      * @param treeBlocks The tree blocks that were broken
+     * @param singular Should only one block of the tree count?
      */
-    void applyExperience(Player player, TreeBlockSet<Block> treeBlocks);
+    void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular);
 
     /**
      * Checks if double drops should be applied
