@@ -1,6 +1,7 @@
 package dev.rosewood.rosetimber.listener;
 
 import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosetimber.events.TreeBlockBreakEvent;
 import dev.rosewood.rosetimber.events.TreeFallEvent;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
 import dev.rosewood.rosetimber.manager.ChoppingManager;
@@ -11,6 +12,7 @@ import dev.rosewood.rosetimber.manager.TreeAnimationManager;
 import dev.rosewood.rosetimber.manager.TreeDefinitionManager;
 import dev.rosewood.rosetimber.manager.TreeDetectionManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;
+import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
 import dev.rosewood.rosetimber.utils.TimberUtils;
@@ -29,26 +31,34 @@ import org.bukkit.inventory.ItemStack;
 public class TreeFallListener implements Listener {
 
     private final RosePlugin rosePlugin;
+    private final TreeDefinitionManager treeDefinitionManager;
+    private final TreeDetectionManager treeDetectionManager;
+    private final TreeAnimationManager treeAnimationManager;
+    private final ChoppingManager choppingManager;
+    private final SaplingManager saplingManager;
+    private final HookManager hookManager;
 
     public TreeFallListener(RosePlugin rosePlugin) {
         this.rosePlugin = rosePlugin;
+        this.treeDefinitionManager = rosePlugin.getManager(TreeDefinitionManager.class);
+        this.treeDetectionManager = rosePlugin.getManager(TreeDetectionManager.class);
+        this.treeAnimationManager = rosePlugin.getManager(TreeAnimationManager.class);
+        this.choppingManager = rosePlugin.getManager(ChoppingManager.class);
+        this.saplingManager = rosePlugin.getManager(SaplingManager.class);
+        this.hookManager = rosePlugin.getManager(HookManager.class);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
-        TreeDetectionManager treeDetectionManager = this.rosePlugin.getManager(TreeDetectionManager.class);
-        TreeAnimationManager treeAnimationManager = this.rosePlugin.getManager(TreeAnimationManager.class);
-        ChoppingManager choppingManager = this.rosePlugin.getManager(ChoppingManager.class);
-        SaplingManager saplingManager = this.rosePlugin.getManager(SaplingManager.class);
-        HookManager hookManager = this.rosePlugin.getManager(HookManager.class);
+        if (event instanceof TreeBlockBreakEvent)
+            return;
 
         Player player = event.getPlayer();
         Block block = event.getBlock();
         ItemStack tool = player.getInventory().getItemInMainHand();
 
         // Protect saplings
-        if (saplingManager.isSaplingProtected(block)) {
+        if (this.saplingManager.isSaplingProtected(block)) {
             event.setCancelled(true);
             return;
         }
@@ -58,12 +68,12 @@ public class TreeFallListener implements Listener {
                 && (Setting.ALLOW_CREATIVE_MODE.getBoolean() || !player.getGameMode().equals(GameMode.CREATIVE))
                 && this.checkToppleWhile(player)
                 && (!Setting.REQUIRE_CHOP_PERMISSION.getBoolean() || player.hasPermission("rosetimber.chop"))
-                && choppingManager.isChopping(player)
-                && !choppingManager.isInCooldown(player)
-                && treeDefinitionManager.isToolValidForAnyTreeDefinition(tool)
-                && hookManager.isUsingAbilityHooks(player);
+                && this.choppingManager.isChopping(player)
+                && !this.choppingManager.isInCooldown(player)
+                && this.treeDefinitionManager.isToolValidForAnyTreeDefinition(tool)
+                && this.hookManager.isUsingAbilityHooks(player);
 
-        if (treeAnimationManager.isBlockInAnimation(block)) {
+        if (this.treeAnimationManager.isBlockInAnimation(block)) {
             isValid = false;
             event.setCancelled(true);
         }
@@ -72,19 +82,19 @@ public class TreeFallListener implements Listener {
         if (!isValid && !alwaysReplantSapling)
             return;
 
-        DetectedTree detectedTree = treeDetectionManager.detectTree(block);
+        DetectedTree detectedTree = this.treeDetectionManager.detectTree(block);
         if (detectedTree == null)
             return;
 
         if (alwaysReplantSapling) {
             Bukkit.getScheduler().runTask(this.rosePlugin, () ->
-                    saplingManager.replantSapling(detectedTree.getTreeDefinition(), detectedTree.getDetectedTreeBlocks().getInitialLogBlock()));
+                    this.saplingManager.replantSapling(detectedTree.getTreeDefinition(), detectedTree.getDetectedTreeBlocks().getInitialLogBlock()));
 
             if (!isValid)
                 return;
         }
 
-        if (!treeDefinitionManager.isToolValidForTreeDefinition(detectedTree.getTreeDefinition(), tool))
+        if (!this.treeDefinitionManager.isToolValidForTreeDefinition(detectedTree.getTreeDefinition(), tool))
             return;
 
         int toolDamage = this.getToolDamage(detectedTree.getDetectedTreeBlocks(), tool.containsEnchantment(Enchantment.SILK_TOUCH));
@@ -100,7 +110,7 @@ public class TreeFallListener implements Listener {
         // Valid tree and meets all conditions past this point
         event.setCancelled(true);
 
-        choppingManager.cooldownPlayer(player);
+        this.choppingManager.cooldownPlayer(player);
 
         // Destroy initiated block if enabled
         if (Setting.DESTROY_INITIATED_BLOCK.getBoolean()) {
@@ -108,12 +118,22 @@ public class TreeFallListener implements Listener {
             detectedTree.getDetectedTreeBlocks().remove(detectedTree.getDetectedTreeBlocks().getInitialLogBlock());
         }
 
+        // Trigger block break events if enabled
+        if (Setting.TRIGGER_BLOCK_BREAK_EVENTS.getBoolean()) {
+            for (ITreeBlock<Block> treeBlock : detectedTree.getDetectedTreeBlocks()) {
+                BlockBreakEvent blockBreakEvent = new TreeBlockBreakEvent(detectedTree, treeBlock.getBlock(), player);
+                Bukkit.getPluginManager().callEvent(blockBreakEvent);
+                if (blockBreakEvent.isCancelled())
+                    detectedTree.getDetectedTreeBlocks().remove(treeBlock);
+            }
+        }
+
         if (!player.getGameMode().equals(GameMode.CREATIVE))
             TimberUtils.applyToolDurability(player, toolDamage);
 
-        hookManager.applyExperienceHooks(player, detectedTree.getDetectedTreeBlocks());
-        treeAnimationManager.runAnimation(detectedTree, player);
-        treeDefinitionManager.dropTreeLoot(detectedTree.getTreeDefinition(), detectedTree.getDetectedTreeBlocks().getInitialLogBlock(), player, false, true);
+        this.hookManager.applyExperienceHooks(player, detectedTree.getDetectedTreeBlocks());
+        this.treeAnimationManager.runAnimation(detectedTree, player);
+        this.treeDefinitionManager.dropTreeLoot(detectedTree.getTreeDefinition(), detectedTree.getDetectedTreeBlocks().getInitialLogBlock(), player, false, true);
 
         // Trigger fell event
         TreeFellEvent treeFellEvent = new TreeFellEvent(player, detectedTree);

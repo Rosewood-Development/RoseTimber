@@ -38,6 +38,7 @@ public class ConfigurationManager extends AbstractConfigurationManager {
         FALLING_BLOCKS_REPLANT_SAPLINGS_CHANCE("falling-blocks-replant-saplings-chance", 1, "The percent chance that fallen leaves have of planting a sapling", "Does nothing if falling-blocks-replant-saplings is false", "The chance is out of 100 and may contain decimals"),
         FALLING_BLOCKS_DEAL_DAMAGE("falling-blocks-deal-damage", true, "Make falling tree blocks deal damage to players if they get hit"),
         FALLING_BLOCK_DAMAGE("falling-block-damage", 1, "The amount of damage that falling tree blocks do", "This does nothing if falling-blocks-deal-damage is false"),
+        TRIGGER_BLOCK_BREAK_EVENTS("trigger-block-break-events", false, "Should a BlockBreakEvent be triggered for every broken tree block?", "You may need to disable some of the mcMMO or Jobs hooks if you enable this", "May cause a decrease in performance depending on what other plugins you have installed"),
         ADD_ITEMS_TO_INVENTORY("add-items-to-inventory", false, "Automatically add tree blocks to the player's inventory instead of dropping them"),
         USE_CUSTOM_SOUNDS("use-custom-sounds", true, "Use custom sounds when toppling trees"),
         USE_CUSTOM_PARTICLES("use-custom-particles", true, "Use custom particles when toppling trees"),
