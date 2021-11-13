@@ -4,6 +4,7 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosetimber.manager.ChoppingManager;
 import dev.rosewood.rosetimber.manager.LocaleManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,8 +30,11 @@ public class CommandHandler implements TabExecutor {
             if (args[0].equalsIgnoreCase("help")) {
                 localeManager.sendMessage(sender, "command-help-title");
                 localeManager.sendSimpleMessage(sender, "command-help-description");
-                localeManager.sendSimpleMessage(sender, "command-reload-description");
-                localeManager.sendSimpleMessage(sender, "command-toggle-description");
+                if (sender.hasPermission("rosetimber.reload"))
+                    localeManager.sendSimpleMessage(sender, "command-reload-description");
+                if (sender.hasPermission("rosetimber.toggle"))
+                    localeManager.sendSimpleMessage(sender, "command-toggle-description");
+                return true;
             } else if (args[0].equalsIgnoreCase("reload")) {
                 if (sender instanceof Player && this.doesntHavePermission(sender, "rosetimber.reload", localeManager))
                     return true;
@@ -72,7 +76,7 @@ public class CommandHandler implements TabExecutor {
         if (args.length < 1)
             return completions;
 
-        Set<String> possibleCompletions = new HashSet<>();
+        Set<String> possibleCompletions = new HashSet<>(Collections.singletonList("help"));
 
         if (commandSender.hasPermission("rosetimber.reload"))
             possibleCompletions.add("reload");

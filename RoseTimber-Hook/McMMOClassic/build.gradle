@@ -1,4 +1,4 @@
 dependencies {
-    implementation project(':Shared')
-    shadow 'com.gmail.nossr50:mcmmo-classic:1.6.2'
+    implementation project(':RoseTimber:Shared')
+    compileOnly 'com.gmail.nossr50:mcmmo-classic:1.6.2'
 }

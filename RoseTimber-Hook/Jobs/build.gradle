@@ -1,4 +1,4 @@
 dependencies {
-    implementation project(':Shared')
-    shadow 'com.gamingmesh:jobs:4.16.1'
+    implementation project(':RoseTimber:Shared')
+    compileOnly 'com.gamingmesh:jobs:4.16.1'
 }

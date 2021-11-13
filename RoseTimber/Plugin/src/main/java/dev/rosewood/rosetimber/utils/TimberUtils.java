@@ -5,11 +5,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -81,8 +83,13 @@ public class TimberUtils {
             if (checkUnbreakingChance(unbreakingLevel))
                 actualDamage++;
 
-        damageable.setDamage(damageable.getDamage() + actualDamage);
-        tool.setItemMeta((ItemMeta) damageable);
+        PlayerItemDamageEvent event = new PlayerItemDamageEvent(player, tool, actualDamage);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled())
+            return;
+
+        damageable.setDamage(damageable.getDamage() + event.getDamage());
+        tool.setItemMeta((ItemMeta) damageable); // Older versions do not have Damageable as implementing ItemMeta, do not remove cast
 
         if (!hasEnoughDurability(tool, 1))
             player.getInventory().setItemInMainHand(null);

@@ -13,19 +13,20 @@ compileJava {
 
 dependencies {
     // Other modules
-    implementation project(':Shared')
-    implementation project(':CoreProtect')
-    implementation project(':Jobs')
-    implementation project(':McMMO')
-    implementation project(':McMMOClassic')
+    implementation project(':RoseTimber:Shared')
+    implementation project(':RoseTimber-Hook:CoreProtect')
+    implementation project(':RoseTimber-Hook:Jobs')
+    implementation project(':RoseTimber-Hook:McMMO')
+    implementation project(':RoseTimber-Hook:McMMOClassic')
 
     // From our repo
-    implementation 'dev.rosewood:rosegarden:1.0.4'
+    api 'dev.rosewood:rosegarden:1.0.8-SNAPSHOT'
 }
 
 processResources {
     from (sourceSets.main.resources.srcDirs) {
         include '**/*.yml'
         filter ReplaceTokens, tokens: ["version": project.property("version")]
+        duplicatesStrategy DuplicatesStrategy.INCLUDE
     }
 }

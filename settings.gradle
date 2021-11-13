@@ -1,19 +1,8 @@
 rootProject.name = 'RoseTimber'
 
-include(':Shared')
-project(':Shared').projectDir = file('RoseTimber/Shared')
-
-include(':Plugin')
-project(':Plugin').projectDir = file('RoseTimber/Plugin')
-
-include(':Jobs')
-project(':Jobs').projectDir = file('RoseTimber-Hook/Jobs')
-
-include(':McMMO')
-project(':McMMO').projectDir = file('RoseTimber-Hook/McMMO')
-
-include(':McMMOClassic')
-project(':McMMOClassic').projectDir = file('RoseTimber-Hook/McMMOClassic')
-
-include(':CoreProtect')
-project(':CoreProtect').projectDir = file('RoseTimber-Hook/CoreProtect')
+include('RoseTimber:Shared')
+include('RoseTimber:Plugin')
+include('RoseTimber-Hook:Jobs')
+include('RoseTimber-Hook:McMMO')
+include('RoseTimber-Hook:McMMOClassic')
+include('RoseTimber-Hook:CoreProtect')

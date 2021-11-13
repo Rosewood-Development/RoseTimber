@@ -1,9 +1,9 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.1.0' apply false
+    id 'com.github.johnrengelman.shadow' version '7.0.0' apply false
 }
 
 allprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
 	apply plugin: 'com.github.johnrengelman.shadow'
     group = 'dev.rosewood'
     version = '1.0.0-SNAPSHOT'
@@ -12,11 +12,10 @@ allprojects {
 	
 	repositories {
         mavenCentral()
-        jcenter()
 
         maven { url = 'https://repo.rosewooddev.io/repository/public/' }
         maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
-        maven { url = 'http://maven.playpro.com' }
+        maven { url = 'https://maven.playpro.com' }
 
         maven {
             url = 'https://repo.rosewooddev.io/repository/maven-public'
@@ -31,25 +30,17 @@ allprojects {
     }
 
     dependencies {
-        shadow 'org.spigotmc:spigot:1.16.3'
+        compileOnly 'org.spigotmc:spigot:1.17.1'
     }
-}
-
-configurations {
-    childJars
 }
 
 dependencies {
-    implementation project(':Shared')
-    implementation project(':Plugin')
-	implementation project(':Jobs')
-	implementation project(':McMMO')
-	implementation project(':McMMOClassic')
-	implementation project(':CoreProtect')
-
-    subprojects.each {
-        childJars project(it.path)
-    }
+    implementation project(':RoseTimber:Shared')
+    implementation project(':RoseTimber:Plugin')
+	implementation project(':RoseTimber-Hook:Jobs')
+	implementation project(':RoseTimber-Hook:McMMO')
+	implementation project(':RoseTimber-Hook:McMMOClassic')
+	implementation project(':RoseTimber-Hook:CoreProtect')
 }
 
 shadowJar {
@@ -59,15 +50,6 @@ shadowJar {
 
     exclude 'dev/rosewood/rosegarden/lib/hikaricp/**/*.class'
     exclude 'dev/rosewood/rosegarden/lib/slf4j/**/*.class'
-}
-
-jar {
-    dependsOn configurations.childJars
-    from {
-        configurations.childJars.collect {
-            zipTree(it)
-        }
-    }
 }
 
 build.dependsOn shadowJar
