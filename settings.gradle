@@ -1,8 +1,1 @@
 rootProject.name = 'RoseTimber'
-
-include('RoseTimber:Shared')
-include('RoseTimber:Plugin')
-include('RoseTimber-Hook:Jobs')
-include('RoseTimber-Hook:McMMO')
-include('RoseTimber-Hook:McMMOClassic')
-include('RoseTimber-Hook:CoreProtect')

@@ -14,17 +14,17 @@ public class JobsHook implements TimberHook {
 
     @Override
     public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular) {
-        if (player.getGameMode().equals(GameMode.CREATIVE)) 
+        if (player.getGameMode() == GameMode.CREATIVE)
             return;
 
-        JobsPlayer jPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
-        if (jPlayer == null) 
+        JobsPlayer jplayer = Jobs.getPlayerManager().getJobsPlayer(player);
+        if (jplayer == null)
             return;
 
         for (ITreeBlock<Block> treeBlock : treeBlocks.getLogBlocks()) {
             Block block = treeBlock.getBlock();
-            BlockActionInfo bInfo = new BlockActionInfo(block, ActionType.BREAK);
-            Jobs.action(jPlayer, bInfo, block);
+            BlockActionInfo info = new BlockActionInfo(block, ActionType.BREAK);
+            Jobs.action(jplayer, info, block);
 
             if (singular)
                 break;

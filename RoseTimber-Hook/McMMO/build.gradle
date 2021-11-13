@@ -1,4 +1,0 @@
-dependencies {
-    implementation project(':RoseTimber:Shared')
-    compileOnly 'com.gmail.nossr50:mcmmo:2.1.145'
-}

@@ -4,17 +4,17 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.hook.CoreProtectHook;
 import dev.rosewood.rosetimber.hook.JobsHook;
-import dev.rosewood.rosetimber.hook.McMMOClassicHook;
 import dev.rosewood.rosetimber.hook.McMMOHook;
 import dev.rosewood.rosetimber.hook.TimberHook;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
-import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class HookManager extends Manager {
 
@@ -35,12 +35,7 @@ public class HookManager extends Manager {
 
         Plugin mcMMO = Bukkit.getPluginManager().getPlugin("mcMMO");
         if (mcMMO != null) {
-            String version = mcMMO.getDescription().getVersion();
-            if (version.startsWith("2")) {
-                this.tryHook("mcMMO", McMMOHook.class);
-            } else {
-                this.tryHook("mcMMO", McMMOClassicHook.class);
-            }
+            this.tryHook("mcMMO", McMMOHook.class);
         }
     }
 
@@ -48,17 +43,17 @@ public class HookManager extends Manager {
     public void disable() {
         this.hooks.clear();
     }
-    
+
     /**
      * Tries to hook into a compatible plugin
-     * 
+     *
      * @param pluginName The name of the plugin
-     * @param hookClass The hook class
+     * @param hookClass  The hook class
      */
     private void tryHook(String pluginName, Class<? extends TimberHook> hookClass) {
-        if (!Bukkit.getPluginManager().isPluginEnabled(pluginName)) 
+        if (!Bukkit.getPluginManager().isPluginEnabled(pluginName))
             return;
-        
+
         try {
             this.hooks.add(hookClass.newInstance());
             this.rosePlugin.getLogger().info(String.format("Hooks: Hooked into %s!", pluginName));
@@ -66,11 +61,11 @@ public class HookManager extends Manager {
             this.rosePlugin.getLogger().info(String.format("Hooks: Unable to hook with %s, the version installed is not supported!", pluginName));
         }
     }
-    
+
     /**
      * Applies experience to the loaded hooks
      *
-     * @param player The player to apply experience to
+     * @param player     The player to apply experience to
      * @param treeBlocks The blocks of the tree that were broken
      */
     public void applyExperienceHooks(Player player, TreeBlockSet<Block> treeBlocks) {

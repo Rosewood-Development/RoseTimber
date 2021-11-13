@@ -1,46 +1,53 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.0.0' apply false
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-allprojects {
-    apply plugin: 'java-library'
-	apply plugin: 'com.github.johnrengelman.shadow'
-    group = 'dev.rosewood'
-    version = '1.0.0-SNAPSHOT'
-	sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-	
-	repositories {
-        mavenCentral()
+group 'dev.rosewood'
+version '1.0.0-SNAPSHOT'
 
-        maven { url = 'https://repo.rosewooddev.io/repository/public/' }
-        maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
-        maven { url = 'https://maven.playpro.com' }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
 
-        maven {
-            url = 'https://repo.rosewooddev.io/repository/maven-public'
-            credentials {
-                username project.mavenUser
-                password project.mavenPassword
-                authentication {
-                    basic(BasicAuthentication)
-                }
+repositories {
+    mavenCentral()
+
+    maven { url = 'https://repo.rosewooddev.io/repository/public/' }
+    maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url = 'https://maven.playpro.com' }
+
+    maven {
+        url = 'https://repo.rosewooddev.io/repository/maven-public'
+        credentials {
+            username project.mavenUser
+            password project.mavenPassword
+            authentication {
+                basic(BasicAuthentication)
             }
         }
-    }
-
-    dependencies {
-        compileOnly 'org.spigotmc:spigot:1.17.1'
     }
 }
 
 dependencies {
-    implementation project(':RoseTimber:Shared')
-    implementation project(':RoseTimber:Plugin')
-	implementation project(':RoseTimber-Hook:Jobs')
-	implementation project(':RoseTimber-Hook:McMMO')
-	implementation project(':RoseTimber-Hook:McMMOClassic')
-	implementation project(':RoseTimber-Hook:CoreProtect')
+    compileOnly 'org.spigotmc:spigot:1.17.1'
+    // Plugin Hooks
+    compileOnly 'net.coreprotect:coreprotect:2.15.0'
+    compileOnly 'com.gmail.nossr50:mcmmo:2.1.145'
+    compileOnly 'com.gamingmesh:jobs:4.16.1'
+
+    // From our repo
+    implementation 'dev.rosewood:rosegarden:1.0.8-SNAPSHOT'
+}
+
+processResources {
+    from (sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+        filter ReplaceTokens, tokens: ["version": project.property("version")]
+        duplicatesStrategy DuplicatesStrategy.INCLUDE
+    }
 }
 
 shadowJar {
@@ -51,5 +58,6 @@ shadowJar {
     exclude 'dev/rosewood/rosegarden/lib/hikaricp/**/*.class'
     exclude 'dev/rosewood/rosegarden/lib/slf4j/**/*.class'
 }
+
 
 build.dependsOn shadowJar

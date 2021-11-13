@@ -1,4 +1,0 @@
-dependencies {
-    implementation project(':RoseTimber:Shared')
-    compileOnly 'net.coreprotect:coreprotect:2.15.0'
-}

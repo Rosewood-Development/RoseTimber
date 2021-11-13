@@ -9,19 +9,19 @@ import org.bukkit.entity.Player;
 
 public class CoreProtectHook implements TimberHook {
 
-    private CoreProtectAPI api;
+    private final CoreProtectAPI api;
 
     public CoreProtectHook() {
         this.api = CoreProtect.getInstance().getAPI();
     }
 
     @Override
-    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singlular) {
+    public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular) {
         if (!this.api.isEnabled())
             return;
 
         for (ITreeBlock<Block> treeBlock : treeBlocks.getAllTreeBlocks())
-            this.api.logRemoval(player.getName(), treeBlock.getLocation(), treeBlock.getBlock().getType(), treeBlock.getBlock().getBlockData());
+            this.api.logRemoval(player.getName(), treeBlock.getLocation(), treeBlock.getBlock().getType(), treeBlock.getBlockData());
     }
 
     @Override

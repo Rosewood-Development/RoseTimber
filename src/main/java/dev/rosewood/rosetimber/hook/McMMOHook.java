@@ -9,22 +9,29 @@ import com.gmail.nossr50.util.player.UserManager;
 import com.gmail.nossr50.util.random.RandomChanceUtil;
 import com.gmail.nossr50.util.skills.RankUtils;
 import com.gmail.nossr50.util.skills.SkillActivationType;
+import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
-import java.util.ArrayList;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+
 public class McMMOHook implements TimberHook {
 
     @Override
     public void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular) {
-        if (player.getGameMode().equals(GameMode.CREATIVE))
+        if (player.getGameMode() == GameMode.CREATIVE)
             return;
 
         ArrayList<BlockState> blockStates = new ArrayList<>();
-        treeBlocks.getLogBlocks().forEach(x -> blockStates.add(x.getBlock().getState()));
+        //        treeBlocks.getLogBlocks().forEach(x -> blockStates.add(x.getBlock().getState()));
+        treeBlocks.getAllTreeBlocks().stream()
+                .map(ITreeBlock::getBlock)
+                .map(Block::getState)
+                .forEach(blockStates::add); // feel free to change it to the line above if you want.
+
         ExperienceAPI.addXpFromBlocksBySkill(blockStates, UserManager.getPlayer(player), PrimarySkillType.WOODCUTTING);
     }
 
