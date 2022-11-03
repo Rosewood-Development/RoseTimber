@@ -1,9 +1,10 @@
 package dev.rosewood.rosetimber.tree.loot;
 
 import dev.rosewood.rosetimber.utils.TimberUtils;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.inventory.ItemStack;
 
 public class TreeLootEntry implements TreeLoot {
 

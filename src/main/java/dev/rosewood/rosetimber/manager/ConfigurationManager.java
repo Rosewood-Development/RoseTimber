@@ -6,6 +6,7 @@ import dev.rosewood.rosegarden.config.RoseSetting;
 import dev.rosewood.rosegarden.manager.AbstractConfigurationManager;
 import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.tree.OnlyToppleWhile;
+
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -99,7 +100,7 @@ public class ConfigurationManager extends AbstractConfigurationManager {
 
     @Override
     protected String[] getHeader() {
-        return new String[] {
+        return new String[]{
                 "__________                  ___________ __       ___",
                 "\\______   \\ ____  ______ ___\\__    ___/|__| _____\\_ |__   ___________",
                 " |       _//  _ \\/  ___// __ \\|    |   |  |/     \\| __ \\_/ __ \\_  __ \\",

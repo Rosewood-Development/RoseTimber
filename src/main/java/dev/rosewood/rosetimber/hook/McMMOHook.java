@@ -26,7 +26,7 @@ public class McMMOHook implements TimberHook {
             return;
 
         ArrayList<BlockState> blockStates = new ArrayList<>();
-        //        treeBlocks.getLogBlocks().forEach(x -> blockStates.add(x.getBlock().getState()));
+        treeBlocks.getLogBlocks().forEach(x -> blockStates.add(x.getBlock().getState()));
         treeBlocks.getAllTreeBlocks().stream()
                 .map(ITreeBlock::getBlock)
                 .map(Block::getState)

@@ -15,10 +15,6 @@ import dev.rosewood.rosetimber.tree.loot.TreeLootEntry;
 import dev.rosewood.rosetimber.tree.loot.TreeLootPool;
 import dev.rosewood.rosetimber.tree.loot.TreeLootResult;
 import dev.rosewood.rosetimber.utils.TimberUtils;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,6 +22,11 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TreeDefinitionManager extends Manager {
 
@@ -70,6 +71,7 @@ public class TreeDefinitionManager extends Manager {
             boolean dropOriginalLog;
             boolean dropOriginalLeaf;
             boolean scatterTreeBlocksOnGround;
+            boolean onlyDetectUpwards;
             TreeLoot logLoot, leafLoot, entireTreeLoot;
             List<ItemStack> requiredTools = new ArrayList<>();
             List<String> treeAnimationTypes;
@@ -91,6 +93,7 @@ public class TreeDefinitionManager extends Manager {
             dropOriginalLog = tree.getBoolean("drop-original-log");
             dropOriginalLeaf = tree.getBoolean("drop-original-leaf");
             scatterTreeBlocksOnGround = tree.getBoolean("scatter-tree-blocks-on-ground");
+            onlyDetectUpwards = tree.getBoolean("only-detect-upwards");
 
             ConfigurationSection logLootSection = tree.getConfigurationSection("log-loot");
             if (logLootSection != null) {
@@ -119,7 +122,7 @@ public class TreeDefinitionManager extends Manager {
             treeAnimationTypes = tree.getStringList("tree-animation-types");
 
             this.treeDefinitions.add(new TreeDefinition(key, logBlockTypes, leafBlockTypes, saplingBlockType, plantableSoilBlockTypes, maxLogDistanceFromTrunk,
-                    maxLeafDistanceFromLog, detectLeavesDiagonally, dropOriginalLog, dropOriginalLeaf, scatterTreeBlocksOnGround, logLoot, leafLoot,
+                    maxLeafDistanceFromLog, detectLeavesDiagonally, dropOriginalLog, dropOriginalLeaf, scatterTreeBlocksOnGround, onlyDetectUpwards, logLoot, leafLoot,
                     entireTreeLoot, requiredTools, treeAnimationTypes));
         }
 
@@ -244,8 +247,8 @@ public class TreeDefinitionManager extends Manager {
     /**
      * Writes a list of TreeLoot to a config section
      *
-     * @param section The section to write to
-     * @param name The name of the value
+     * @param section  The section to write to
+     * @param name     The name of the value
      * @param treeLoot The tree loot to write
      */
     private void writeTreeLootToSection(CommentedConfigurationSection section, String name, TreeLoot treeLoot) {
@@ -299,8 +302,8 @@ public class TreeDefinitionManager extends Manager {
      * Narrows a List of TreeDefinitions down to ones matching the given Block and TreeBlockType
      *
      * @param possibleTreeDefinitions The possible TreeDefinitions
-     * @param block The Block to narrow to
-     * @param treeBlockType The TreeBlockType of the given Block
+     * @param block                   The Block to narrow to
+     * @param treeBlockType           The TreeBlockType of the given Block
      * @return A Set of TreeDefinitions narrowed down
      */
     public List<TreeDefinition> narrowTreeDefinition(List<TreeDefinition> possibleTreeDefinitions, Block block, TreeBlockType treeBlockType) {
@@ -354,7 +357,7 @@ public class TreeDefinitionManager extends Manager {
      * Checks if a given tool is valid for a given tree definition, also takes into account global tools
      *
      * @param treeDefinition The TreeDefinition to use
-     * @param tool The tool to check
+     * @param tool           The tool to check
      * @return True if the tool is allowed for toppling the given TreeDefinition
      */
     public boolean isToolValidForTreeDefinition(TreeDefinition treeDefinition, ItemStack tool) {
@@ -372,9 +375,9 @@ public class TreeDefinitionManager extends Manager {
     /**
      * Tries to spawn loot for a given TreeBlock with the given TreeDefinition for a given Player
      *
-     * @param treeDefinition The TreeDefinition to use
-     * @param treeBlock The TreeBlock to drop for
-     * @param player The Player to drop for
+     * @param treeDefinition  The TreeDefinition to use
+     * @param treeBlock       The TreeBlock to drop for
+     * @param player          The Player to drop for
      * @param isForEntireTree If the loot is for the entire tree
      */
     public void dropTreeLoot(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock, Player player, boolean hasSilkTouch, boolean isForEntireTree) {
@@ -398,7 +401,7 @@ public class TreeDefinitionManager extends Manager {
                 lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
             } else {
                 switch (treeBlock.getTreeBlockType()) {
-                    case LOG:
+                    case LOG -> {
                         results.add(treeDefinition.getLogLoot().roll(bonusMultiplier));
                         results.add(this.globalLogLoot.roll(bonusMultiplier));
                         if (treeDefinition.shouldDropOriginalLog()) {
@@ -406,8 +409,8 @@ public class TreeDefinitionManager extends Manager {
                                 lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
                             lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
                         }
-                        break;
-                    case LEAF:
+                    }
+                    case LEAF -> {
                         results.add(treeDefinition.getLeafLoot().roll(bonusMultiplier));
                         results.add(this.globalLeafLoot.roll(bonusMultiplier));
                         if (treeDefinition.shouldDropOriginalLeaf()) {
@@ -415,7 +418,7 @@ public class TreeDefinitionManager extends Manager {
                                 lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
                             lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
                         }
-                        break;
+                    }
                 }
             }
         }

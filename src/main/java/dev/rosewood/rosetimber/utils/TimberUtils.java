@@ -1,10 +1,6 @@
 package dev.rosewood.rosetimber.utils;
 
 import dev.rosewood.rosetimber.tree.ITreeBlock;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +11,11 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class TimberUtils {
 
@@ -58,13 +59,11 @@ public class TimberUtils {
 
     public static Collection<ItemStack> getBlockDrops(ITreeBlock<?> treeBlock) {
         Set<ItemStack> drops = new HashSet<>();
-        if (treeBlock.getBlock() instanceof Block) {
-            Block block = (Block) treeBlock.getBlock();
+        if (treeBlock.getBlock() instanceof Block block) {
             if (block.getType().equals(Material.AIR))
                 return drops;
             drops.add(new ItemStack(block.getType()));
-        } else if (treeBlock.getBlock() instanceof FallingBlock) {
-            FallingBlock fallingBlock = (FallingBlock) treeBlock.getBlock();
+        } else if (treeBlock.getBlock() instanceof FallingBlock fallingBlock) {
             drops.add(new ItemStack(fallingBlock.getBlockData().getMaterial()));
         }
         return drops;
@@ -83,7 +82,8 @@ public class TimberUtils {
             if (checkUnbreakingChance(unbreakingLevel))
                 actualDamage++;
 
-        PlayerItemDamageEvent event = new PlayerItemDamageEvent(player, tool, actualDamage);
+        // This could decrease the durability more than intended, we'll just have to live with that
+        PlayerItemDamageEvent event = new PlayerItemDamageEvent(player, tool, actualDamage, damage);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
@@ -96,10 +96,9 @@ public class TimberUtils {
     }
 
     public static boolean hasEnoughDurability(ItemStack tool, int requiredAmount) {
-        if (!tool.hasItemMeta() || !(tool.getItemMeta() instanceof Damageable) || tool.getType().getMaxDurability() < 1)
+        if (!tool.hasItemMeta() || !(tool.getItemMeta() instanceof Damageable damageable) || tool.getType().getMaxDurability() < 1)
             return true;
 
-        Damageable damageable = (Damageable) tool.getItemMeta();
         int durabilityRemaining = tool.getType().getMaxDurability() - damageable.getDamage();
         return durabilityRemaining > requiredAmount;
     }

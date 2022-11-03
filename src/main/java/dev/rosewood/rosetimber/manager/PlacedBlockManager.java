@@ -5,10 +5,6 @@ import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +17,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class PlacedBlockManager extends Manager implements Listener {
 
@@ -40,7 +41,7 @@ public class PlacedBlockManager extends Manager implements Listener {
         this.maxPlacedBlockMemorySize = Setting.IGNORE_PLACED_BLOCKS_MEMORY_SIZE.getInt();
 
         // Ensures the oldest entry is removed if it exceeds the limit
-        this.placedBlocks = Collections.newSetFromMap(new LinkedHashMap<Location, Boolean>() {
+        this.placedBlocks = Collections.newSetFromMap(new LinkedHashMap<>() {
             @Override
             protected boolean removeEldestEntry(Map.Entry<Location, Boolean> eldest) {
                 return this.size() > PlacedBlockManager.this.maxPlacedBlockMemorySize;

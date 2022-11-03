@@ -3,7 +3,6 @@ package dev.rosewood.rosetimber.manager;
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.hook.CoreProtectHook;
-import dev.rosewood.rosetimber.hook.JobsHook;
 import dev.rosewood.rosetimber.hook.McMMOHook;
 import dev.rosewood.rosetimber.hook.TimberHook;
 import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
@@ -30,7 +29,6 @@ public class HookManager extends Manager {
     public void reload() {
         this.hooks.clear();
 
-        this.tryHook("Jobs", JobsHook.class);
         this.tryHook("CoreProtect", CoreProtectHook.class);
 
         Plugin mcMMO = Bukkit.getPluginManager().getPlugin("mcMMO");
@@ -55,7 +53,7 @@ public class HookManager extends Manager {
             return;
 
         try {
-            this.hooks.add(hookClass.newInstance());
+            this.hooks.add(hookClass.getConstructor().newInstance());
             this.rosePlugin.getLogger().info(String.format("Hooks: Hooked into %s!", pluginName));
         } catch (Exception ex) {
             this.rosePlugin.getLogger().info(String.format("Hooks: Unable to hook with %s, the version installed is not supported!", pluginName));
@@ -70,12 +68,9 @@ public class HookManager extends Manager {
      */
     public void applyExperienceHooks(Player player, TreeBlockSet<Block> treeBlocks) {
         for (TimberHook hook : this.hooks) {
-            if (hook instanceof JobsHook) {
-                hook.applyExperience(player, treeBlocks, !Setting.HOOKS_JOBS_APPLY_EXPERIENCE.getBoolean());
-            } else { // mcMMO
-                if (Setting.HOOKS_MCMMO_APPLY_EXPERIENCE.getBoolean())
-                    hook.applyExperience(player, treeBlocks, false);
-            }
+            // mcMMO
+            if (Setting.HOOKS_MCMMO_APPLY_EXPERIENCE.getBoolean())
+                hook.applyExperience(player, treeBlocks, false);
         }
     }
 

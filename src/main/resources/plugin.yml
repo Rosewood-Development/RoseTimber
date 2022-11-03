@@ -3,19 +3,19 @@ version: '@version@'
 author: Esophose
 main: dev.rosewood.rosetimber.RoseTimber
 api-version: '1.13'
-softdepend: [mcMMO, Jobs, CoreProtect, PlaceholderAPI]
-commands:
-  rosetimber:
-    description: Reloads the configuration file
-    usage: /rosetimber reload
-    aliases: [rt]
+softdepend: [ mcMMO, CoreProtect, PlaceholderAPI ]
 permissions:
+  rosetimber.basecommand:
+    description: The base command permission for being able to see the RoseStacker command
+    default: true
   rosetimber.*:
     description: Inherits all plugin permissions
     children:
+      rosetimber.reload: true
+      rosetimber.toggle: true
+      rosetimber.help: true
       rosetimber.chop: true
       rosetimber.bonusloot: true
-      rosetimber.reload: true
       rosetimber.bypasscooldown: true
   rosetimber.chop:
     description: Allows players to trigger the trees toppling down effect

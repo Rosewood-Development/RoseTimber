@@ -1,23 +1,34 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'java-library'
+    id 'maven-publish'
 }
 
 group 'dev.rosewood'
 version '1.0.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-compileJava.options.encoding = 'UTF-8'
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+compileJava {
+    options.compilerArgs += ['-parameters']
+    options.fork = true
+    options.encoding = 'UTF-8'
+}
 
 repositories {
     mavenCentral()
 
     maven { url = 'https://repo.rosewooddev.io/repository/public/' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://repo.codemc.org/repository/maven-public' }
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
     maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
     maven { url = 'https://maven.playpro.com' }
+    maven { url = 'https://jitpack.io' }
 
     maven {
         url = 'https://repo.rosewooddev.io/repository/maven-public'
@@ -32,32 +43,57 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot:1.17.1'
+    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+
     // Plugin Hooks
-    compileOnly 'net.coreprotect:coreprotect:2.15.0'
-    compileOnly 'com.gmail.nossr50:mcmmo:2.1.145'
-    compileOnly 'com.gamingmesh:jobs:4.16.1'
+    compileOnly 'net.coreprotect:coreprotect:19.4'
+    compileOnly 'com.gmail.nossr50:mcmmo:2.1.209'
+//    compileOnly 'com.github.Zrips:Jobs:4.17.2' // Future Problem
 
     // From our repo
-    implementation 'dev.rosewood:rosegarden:1.0.8-SNAPSHOT'
-}
-
-processResources {
-    from (sourceSets.main.resources.srcDirs) {
-        include '**/*.yml'
-        filter ReplaceTokens, tokens: ["version": project.property("version")]
-        duplicatesStrategy DuplicatesStrategy.INCLUDE
-    }
+    api 'dev.rosewood:rosegarden:1.1.0.48-SNAPSHOT'
 }
 
 shadowJar {
     archiveClassifier.set(null)
 
     relocate('dev.rosewood.rosegarden', 'dev.rosewood.rosetimber.lib.rosegarden')
-
-    exclude 'dev/rosewood/rosegarden/lib/hikaricp/**/*.class'
-    exclude 'dev/rosewood/rosegarden/lib/slf4j/**/*.class'
 }
 
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+        filter ReplaceTokens, tokens: ["version": project.property("version")]
+        duplicatesStrategy DuplicatesStrategy.INCLUDE
+    }
+}
+
+publishing {
+//    This sounds like a nicole thing to do
+//    publications {
+//        shadow(MavenPublication) { publication ->
+//            project.shadow.component(publication)
+//            artifactId = 'rosetimber'
+//            pom {
+//                name = 'rosetimber'
+//            }
+//        }
+//    }
+//
+    repositories {
+        if (project.hasProperty('mavenUser') && project.hasProperty('mavenPassword')) {
+            maven {
+                credentials {
+                    username project.mavenUser
+                    password project.mavenPassword
+                }
+
+                def releasesRepoUrl = 'https://repo.rosewooddev.io/repository/public-releases/'
+                def snapshotsRepoUrl = 'https://repo.rosewooddev.io/repository/public-snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            }
+        }
+    }
+}
 
 build.dependsOn shadowJar

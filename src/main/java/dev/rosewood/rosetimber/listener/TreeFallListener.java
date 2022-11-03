@@ -147,20 +147,17 @@ public class TreeFallListener implements Listener {
      * @return True if the check passes, otherwise false
      */
     private boolean checkToppleWhile(Player player) {
-        switch (OnlyToppleWhile.fromString(Setting.ONLY_TOPPLE_WHILE.getString())) {
-            case SNEAKING:
-                return player.isSneaking();
-            case NOT_SNEAKING:
-                return !player.isSneaking();
-            default:
-                return true;
-        }
+        return switch (OnlyToppleWhile.fromString(Setting.ONLY_TOPPLE_WHILE.getString())) {
+            case SNEAKING -> player.isSneaking();
+            case NOT_SNEAKING -> !player.isSneaking();
+            default -> true;
+        };
     }
 
     /**
      * Gets the amount of damage that should be applied to the tool
      *
-     * @param treeBlocks The tree blocks that were detected
+     * @param treeBlocks   The tree blocks that were detected
      * @param hasSilkTouch true if the tool has silk touch, false otherwise
      * @return The amount of damage to apply to the tool
      */

@@ -9,9 +9,9 @@ public interface TimberHook {
     /**
      * Applies experience to a player for a fallen tree
      *
-     * @param player The player
+     * @param player     The player
      * @param treeBlocks The tree blocks that were broken
-     * @param singular Should only one block of the tree count?
+     * @param singular   Should only one block of the tree count?
      */
     void applyExperience(Player player, TreeBlockSet<Block> treeBlocks, boolean singular);
 
@@ -30,5 +30,5 @@ public interface TimberHook {
      * @return True if an ability is being used, otherwise false
      */
     boolean isUsingAbility(Player player);
-    
+
 }

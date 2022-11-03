@@ -9,14 +9,15 @@ import dev.rosewood.rosetimber.tree.TreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class TreeDetectionManager extends Manager {
 
@@ -60,7 +61,7 @@ public class TreeDetectionManager extends Manager {
         this.placedBlockManager = this.rosePlugin.getManager(PlacedBlockManager.class);
         this.maxLogBlocksAllowed = Setting.MAX_LOGS_PER_CHOP.getInt();
         this.numLeavesRequiredForTree = Setting.LEAVES_REQUIRED_FOR_TREE.getInt();
-        this.onlyBreakLogsUpwards = Setting.ONLY_DETECT_LOGS_UPWARDS.getBoolean();
+//        this.onlyBreakLogsUpwards = Setting.ONLY_DETECT_LOGS_UPWARDS.getBoolean();
         this.entireTreeBase = Setting.BREAK_ENTIRE_TREE_BASE.getBoolean();
         this.destroyLeaves = Setting.DESTROY_LEAVES.getBoolean();
     }

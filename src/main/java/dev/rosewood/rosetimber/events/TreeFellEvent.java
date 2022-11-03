@@ -14,7 +14,7 @@ public class TreeFellEvent extends TreeEvent {
     }
 
     private static final HandlerList handlers = new HandlerList();
-    
+
     @Override
     public HandlerList getHandlers() {
         return handlers;
@@ -23,5 +23,5 @@ public class TreeFellEvent extends TreeEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-	
+
 }

@@ -84,29 +84,22 @@ public class TreeBlockSet<BlockType> implements Collection<ITreeBlock<BlockType>
 
     @Override
     public boolean add(ITreeBlock<BlockType> treeBlock) {
-        switch (treeBlock.getTreeBlockType()) {
-            case LOG:
-                return this.logBlocks.add(treeBlock);
-            case LEAF:
-                return this.leafBlocks.add(treeBlock);
-        }
-        return false;
+        return switch (treeBlock.getTreeBlockType()) {
+            case LOG -> this.logBlocks.add(treeBlock);
+            case LEAF -> this.leafBlocks.add(treeBlock);
+        };
     }
 
     @Override
     public boolean remove(Object o) {
-        if (!(o instanceof ITreeBlock))
+        if (!(o instanceof ITreeBlock<?> treeBlock))
             return false;
 
-        ITreeBlock<?> treeBlock = (ITreeBlock<?>) o;
-        switch (treeBlock.getTreeBlockType()) {
-            case LOG:
-                return this.logBlocks.remove(treeBlock);
-            case LEAF:
-                return this.leafBlocks.remove(treeBlock);
-        }
+        return switch (treeBlock.getTreeBlockType()) {
+            case LOG -> this.logBlocks.remove(treeBlock);
+            case LEAF -> this.leafBlocks.remove(treeBlock);
+        };
 
-        return false;
     }
 
     @Override

@@ -4,12 +4,12 @@ import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosetimber.tree.loot.TreeLoot;
 import dev.rosewood.rosetimber.tree.loot.TreeLootEntry;
 import dev.rosewood.rosetimber.tree.loot.TreeLootPool;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TreeDefinition {
 
@@ -21,6 +21,7 @@ public class TreeDefinition {
     private final boolean detectLeavesDiagonally;
     private final boolean dropOriginalLog, dropOriginalLeaf;
     private final boolean scatterTreeBlocksOnGround;
+    private final boolean onlyDetectUpwards;
     private final TreeLoot logLoot, leafLoot, entireTreeLoot;
     private final List<ItemStack> requiredTools;
     private final List<String> treeAnimationTypes;
@@ -28,7 +29,7 @@ public class TreeDefinition {
     public TreeDefinition(String key, List<Material> logBlockTypes, List<Material> leafBlockTypes, Material saplingBlockTypes,
                           List<Material> plantableSoilBlockTypes, double maxLogDistanceFromTrunk, double maxLeafDistanceFromLog,
                           boolean detectLeavesDiagonally, boolean dropOriginalLog, boolean dropOriginalLeaf,
-                          boolean scatterTreeBlocksOnGround, TreeLoot logLoot, TreeLoot leafLoot, TreeLoot entireTreeLoot,
+                          boolean scatterTreeBlocksOnGround, boolean onlyDetectUpwards, TreeLoot logLoot, TreeLoot leafLoot, TreeLoot entireTreeLoot,
                           List<ItemStack> requiredTools, List<String> treeAnimationTypes) {
         this.key = key;
         this.logBlockTypes = logBlockTypes;
@@ -41,6 +42,7 @@ public class TreeDefinition {
         this.dropOriginalLog = dropOriginalLog;
         this.dropOriginalLeaf = dropOriginalLeaf;
         this.scatterTreeBlocksOnGround = scatterTreeBlocksOnGround;
+        this.onlyDetectUpwards = onlyDetectUpwards;
         this.logLoot = logLoot;
         this.leafLoot = leafLoot;
         this.entireTreeLoot = entireTreeLoot;
@@ -190,7 +192,7 @@ public class TreeDefinition {
 
         treeDefinitions.add(new TreeDefinition(
                 "oak",
-                Arrays.asList(Material.OAK_LOG, Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD),
+                List.of(Material.OAK_LOG, Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD),
                 Collections.singletonList(Material.OAK_LEAVES),
                 Material.OAK_SAPLING,
                 new ArrayList<>(),
@@ -200,6 +202,7 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.OAK_SAPLING), null),
@@ -213,7 +216,7 @@ public class TreeDefinition {
 
         treeDefinitions.add(new TreeDefinition(
                 "spruce",
-                Arrays.asList(Material.SPRUCE_LOG, Material.STRIPPED_SPRUCE_LOG, Material.SPRUCE_WOOD, Material.STRIPPED_SPRUCE_WOOD),
+                List.of(Material.SPRUCE_LOG, Material.STRIPPED_SPRUCE_LOG, Material.SPRUCE_WOOD, Material.STRIPPED_SPRUCE_WOOD),
                 Collections.singletonList(Material.SPRUCE_LEAVES),
                 Material.SPRUCE_SAPLING,
                 new ArrayList<>(),
@@ -223,6 +226,7 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.SPRUCE_SAPLING), null),
@@ -235,7 +239,7 @@ public class TreeDefinition {
 
         treeDefinitions.add(new TreeDefinition(
                 "birch",
-                Arrays.asList(Material.BIRCH_LOG, Material.STRIPPED_BIRCH_LOG, Material.BIRCH_WOOD, Material.STRIPPED_BIRCH_WOOD),
+                List.of(Material.BIRCH_LOG, Material.STRIPPED_BIRCH_LOG, Material.BIRCH_WOOD, Material.STRIPPED_BIRCH_WOOD),
                 Collections.singletonList(Material.BIRCH_LEAVES),
                 Material.BIRCH_SAPLING,
                 new ArrayList<>(),
@@ -245,6 +249,7 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.BIRCH_SAPLING), null),
@@ -257,7 +262,7 @@ public class TreeDefinition {
 
         treeDefinitions.add(new TreeDefinition(
                 "jungle",
-                Arrays.asList(Material.JUNGLE_LOG, Material.STRIPPED_JUNGLE_LOG, Material.JUNGLE_WOOD, Material.STRIPPED_JUNGLE_WOOD),
+                List.of(Material.JUNGLE_LOG, Material.STRIPPED_JUNGLE_LOG, Material.JUNGLE_WOOD, Material.STRIPPED_JUNGLE_WOOD),
                 Collections.singletonList(Material.JUNGLE_LEAVES),
                 Material.JUNGLE_SAPLING,
                 new ArrayList<>(),
@@ -267,6 +272,7 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(2.5, new ItemStack(Material.JUNGLE_SAPLING), null),
@@ -279,7 +285,7 @@ public class TreeDefinition {
 
         treeDefinitions.add(new TreeDefinition(
                 "acacia",
-                Arrays.asList(Material.ACACIA_LOG, Material.STRIPPED_ACACIA_LOG, Material.ACACIA_WOOD, Material.STRIPPED_ACACIA_WOOD),
+                List.of(Material.ACACIA_LOG, Material.STRIPPED_ACACIA_LOG, Material.ACACIA_WOOD, Material.STRIPPED_ACACIA_WOOD),
                 Collections.singletonList(Material.ACACIA_LEAVES),
                 Material.ACACIA_SAPLING,
                 new ArrayList<>(),
@@ -289,6 +295,7 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.ACACIA_SAPLING), null),
@@ -301,7 +308,7 @@ public class TreeDefinition {
 
         treeDefinitions.add(new TreeDefinition(
                 "dark_oak",
-                Arrays.asList(Material.DARK_OAK_LOG, Material.STRIPPED_DARK_OAK_LOG, Material.DARK_OAK_WOOD, Material.STRIPPED_DARK_OAK_WOOD),
+                List.of(Material.DARK_OAK_LOG, Material.STRIPPED_DARK_OAK_LOG, Material.DARK_OAK_WOOD, Material.STRIPPED_DARK_OAK_WOOD),
                 Collections.singletonList(Material.DARK_OAK_LEAVES),
                 Material.DARK_OAK_SAPLING,
                 new ArrayList<>(),
@@ -311,6 +318,7 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.DARK_OAK_SAPLING), null),
@@ -334,6 +342,8 @@ public class TreeDefinition {
                 false,
                 false,
                 false,
+                true,
+
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(100, new ItemStack(Material.BROWN_MUSHROOM), null, -6, 2)
@@ -355,6 +365,7 @@ public class TreeDefinition {
                 false,
                 false,
                 false,
+                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(100, new ItemStack(Material.RED_MUSHROOM), null, -6, 2)
@@ -368,16 +379,17 @@ public class TreeDefinition {
         if (NMSUtil.getVersionNumber() >= 16) {
             treeDefinitions.add(new TreeDefinition(
                     "crimson",
-                    Arrays.asList(Material.CRIMSON_STEM, Material.STRIPPED_CRIMSON_STEM, Material.CRIMSON_HYPHAE, Material.STRIPPED_CRIMSON_HYPHAE),
-                    Arrays.asList(Material.NETHER_WART_BLOCK, Material.SHROOMLIGHT),
+                    List.of(Material.CRIMSON_STEM, Material.STRIPPED_CRIMSON_STEM, Material.CRIMSON_HYPHAE, Material.STRIPPED_CRIMSON_HYPHAE),
+                    List.of(Material.NETHER_WART_BLOCK, Material.SHROOMLIGHT),
                     Material.CRIMSON_FUNGUS,
-                    Arrays.asList(Material.CRIMSON_NYLIUM, Material.NETHERRACK),
+                    List.of(Material.CRIMSON_NYLIUM, Material.NETHERRACK),
                     2.5,
                     5,
                     true,
                     true,
                     true,
                     false,
+                    true,
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
@@ -387,18 +399,41 @@ public class TreeDefinition {
 
             treeDefinitions.add(new TreeDefinition(
                     "warped",
-                    Arrays.asList(Material.WARPED_STEM, Material.STRIPPED_WARPED_STEM, Material.WARPED_HYPHAE, Material.STRIPPED_WARPED_HYPHAE),
-                    Arrays.asList(Material.WARPED_WART_BLOCK, Material.SHROOMLIGHT),
+                    List.of(Material.WARPED_STEM, Material.STRIPPED_WARPED_STEM, Material.WARPED_HYPHAE, Material.STRIPPED_WARPED_HYPHAE),
+                    List.of(Material.WARPED_WART_BLOCK, Material.SHROOMLIGHT),
                     Material.WARPED_FUNGUS,
-                    Arrays.asList(Material.WARPED_NYLIUM, Material.NETHERRACK),
+                    List.of(Material.WARPED_NYLIUM, Material.NETHERRACK),
                     2.5,
                     5,
                     true,
                     true,
                     true,
                     false,
+                    true,
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
+                    TreeLootPool.empty(),
+                    new ArrayList<>(),
+                    Collections.singletonList("TOPPLE")
+            ));
+
+            treeDefinitions.add(new TreeDefinition(
+                    "mangrove",
+                    List.of(Material.MANGROVE_LOG, Material.STRIPPED_MANGROVE_LOG, Material.MANGROVE_WOOD, Material.STRIPPED_MANGROVE_WOOD, Material.MANGROVE_ROOTS, Material.MUDDY_MANGROVE_ROOTS),
+                    List.of(Material.MANGROVE_LEAVES),
+                    Material.MANGROVE_PROPAGULE,
+                    List.of(),
+                    10.0,
+                    10.0,
+                    true,
+                    true,
+                    false,
+                    false,
+                    true,
+                    TreeLootPool.empty(),
+                    new TreeLootPool(
+                            new TreeLootEntry(2, new ItemStack(Material.STICK), null)
+                    ),
                     TreeLootPool.empty(),
                     new ArrayList<>(),
                     Collections.singletonList("TOPPLE")
@@ -412,7 +447,7 @@ public class TreeDefinition {
      * @return the default plantable soils for all tree definitions
      */
     public static List<Material> getDefaultGlobalPlantableSoils() {
-        return Arrays.asList(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT, Material.PODZOL);
+        return List.of(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT, Material.PODZOL);
     }
 
     /**
@@ -444,12 +479,14 @@ public class TreeDefinition {
      * @return the default required tools for all tree definitions
      */
     public static List<Material> getDefaultGlobalRequiredTools() {
-        List<Material> materials = new ArrayList<>(Arrays.asList(Material.WOODEN_AXE, Material.STONE_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE));
-
-        if (NMSUtil.getVersionNumber() >= 16)
-            materials.add(Material.NETHERITE_AXE);
-
-        return materials;
+        return new ArrayList<>(List.of(
+                Material.WOODEN_AXE,
+                Material.STONE_AXE,
+                Material.IRON_AXE,
+                Material.GOLDEN_AXE,
+                Material.DIAMOND_AXE,
+                Material.NETHERITE_AXE
+        ));
     }
 
 }

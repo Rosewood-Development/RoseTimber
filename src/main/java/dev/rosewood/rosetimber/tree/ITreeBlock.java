@@ -1,9 +1,10 @@
 package dev.rosewood.rosetimber.tree;
 
-import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
+
+import java.util.Objects;
 
 public abstract class ITreeBlock<T> {
 

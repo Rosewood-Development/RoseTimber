@@ -11,15 +11,6 @@ import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
-import java.lang.reflect.Constructor;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
@@ -32,6 +23,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class TreeAnimationManager extends Manager implements Listener, Runnable {
 
@@ -88,7 +89,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
     /**
      * Registers a new tree animation type
      *
-     * @param animationName The name of the tree animation, must be unique
+     * @param animationName      The name of the tree animation, must be unique
      * @param treeAnimationClass The class of the tree animation
      * @return true if the animation was successfully registered, otherwise false
      */
@@ -115,7 +116,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      * Plays an animation for toppling a tree
      *
      * @param detectedTree The DetectedTree
-     * @param player The Player who toppled the tree
+     * @param player       The Player who toppled the tree
      */
     public void runAnimation(DetectedTree detectedTree, Player player) {
         List<String> treeAnimationTypes = detectedTree.getTreeDefinition().getTreeAnimationTypes();
@@ -174,7 +175,7 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      * Reacts to a falling block hitting the ground
      *
      * @param treeAnimation The tree animation for the falling block
-     * @param treeBlock The tree block to impact
+     * @param treeBlock     The tree block to impact
      */
     public void runFallingBlockImpact(TreeAnimation treeAnimation, ITreeBlock<FallingBlock> treeBlock) {
         TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
