@@ -193,7 +193,7 @@ public class TreeDefinition {
         treeDefinitions.add(new TreeDefinition(
                 "oak",
                 List.of(Material.OAK_LOG, Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD),
-                Collections.singletonList(Material.OAK_LEAVES),
+                List.of(Material.OAK_LEAVES, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES),
                 Material.OAK_SAPLING,
                 new ArrayList<>(),
                 6,
