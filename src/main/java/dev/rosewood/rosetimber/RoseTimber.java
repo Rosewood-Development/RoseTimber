@@ -4,7 +4,7 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.config.RoseSetting;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
-import dev.rosewood.rosetimber.config.SettingsKey;
+import dev.rosewood.rosetimber.config.SettingKey;
 import dev.rosewood.rosetimber.listener.TreeFallListener;
 import dev.rosewood.rosetimber.manager.ChoppingManager;
 import dev.rosewood.rosetimber.manager.CommandManager;
@@ -74,7 +74,7 @@ public class RoseTimber extends RosePlugin {
 
     @Override
     protected @NotNull List<RoseSetting<?>> getRoseConfigSettings() {
-        return SettingsKey.getKeys();
+        return SettingKey.getKeys();
     }
 
     @Override

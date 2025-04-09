@@ -1,7 +1,7 @@
 package dev.rosewood.rosetimber.listener;
 
 import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosetimber.config.SettingsKey;
+import dev.rosewood.rosetimber.config.SettingKey;
 import dev.rosewood.rosetimber.events.TreeBlockBreakEvent;
 import dev.rosewood.rosetimber.events.TreeFallEvent;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
@@ -64,10 +64,10 @@ public class TreeFallListener implements Listener {
         }
 
         // Condition checks
-        boolean isValid = !SettingsKey.DISABLED_WORLDS.get().contains(player.getWorld().getName())
-                && (SettingsKey.ALLOW_CREATIVE_MODE.get() || !player.getGameMode().equals(GameMode.CREATIVE))
+        boolean isValid = !SettingKey.DISABLED_WORLDS.get().contains(player.getWorld().getName())
+                && (SettingKey.ALLOW_CREATIVE_MODE.get() || !player.getGameMode().equals(GameMode.CREATIVE))
                 && this.checkToppleWhile(player)
-                && (!SettingsKey.REQUIRE_CHOP_PERMISSION.get() || player.hasPermission("rosetimber.chop"))
+                && (!SettingKey.REQUIRE_CHOP_PERMISSION.get() || player.hasPermission("rosetimber.chop"))
                 && this.choppingManager.isChopping(player)
                 && !this.choppingManager.isInCooldown(player)
                 && this.treeDefinitionManager.isToolValidForAnyTreeDefinition(tool)
@@ -78,7 +78,7 @@ public class TreeFallListener implements Listener {
             event.setCancelled(true);
         }
 
-        boolean alwaysReplantSapling = SettingsKey.ALWAYS_REPLANT_SAPLING.get();
+        boolean alwaysReplantSapling = SettingKey.ALWAYS_REPLANT_SAPLING.get();
         if (!isValid && !alwaysReplantSapling)
             return;
 
@@ -98,7 +98,7 @@ public class TreeFallListener implements Listener {
             return;
 
         int toolDamage = this.getToolDamage(detectedTree.getDetectedTreeBlocks(), tool.containsEnchantment(Enchantment.SILK_TOUCH));
-        if (SettingsKey.PROTECT_TOOL.get() && !TimberUtils.hasEnoughDurability(tool, toolDamage))
+        if (SettingKey.PROTECT_TOOL.get() && !TimberUtils.hasEnoughDurability(tool, toolDamage))
             return;
 
         // Trigger fall event
@@ -113,13 +113,13 @@ public class TreeFallListener implements Listener {
         this.choppingManager.cooldownPlayer(player);
 
         // Destroy initiated block if enabled
-        if (SettingsKey.DESTROY_INITIATED_BLOCK.get()) {
+        if (SettingKey.DESTROY_INITIATED_BLOCK.get()) {
             detectedTree.getDetectedTreeBlocks().getInitialLogBlock().getBlock().setType(Material.AIR);
             detectedTree.getDetectedTreeBlocks().remove(detectedTree.getDetectedTreeBlocks().getInitialLogBlock());
         }
 
         // Trigger block break events if enabled
-        if (SettingsKey.TRIGGER_BLOCK_BREAK_EVENTS.get()) {
+        if (SettingKey.TRIGGER_BLOCK_BREAK_EVENTS.get()) {
             for (ITreeBlock<Block> treeBlock : detectedTree.getDetectedTreeBlocks()) {
                 BlockBreakEvent blockBreakEvent = new TreeBlockBreakEvent(detectedTree, treeBlock.getBlock(), player);
                 Bukkit.getPluginManager().callEvent(blockBreakEvent);
@@ -147,7 +147,7 @@ public class TreeFallListener implements Listener {
      * @return True if the check passes, otherwise false
      */
     private boolean checkToppleWhile(Player player) {
-        return switch (OnlyToppleWhile.fromString(SettingsKey.ONLY_TOPPLE_WHILE.get())) {
+        return switch (OnlyToppleWhile.fromString(SettingKey.ONLY_TOPPLE_WHILE.get())) {
             case SNEAKING -> player.isSneaking();
             case NOT_SNEAKING -> !player.isSneaking();
             default -> true;
@@ -162,10 +162,10 @@ public class TreeFallListener implements Listener {
      * @return The amount of damage to apply to the tool
      */
     private int getToolDamage(TreeBlockSet<Block> treeBlocks, boolean hasSilkTouch) {
-        if (!SettingsKey.REALISTIC_TOOL_DAMAGE.get())
+        if (!SettingKey.REALISTIC_TOOL_DAMAGE.get())
             return 1;
 
-        if (SettingsKey.APPLY_SILK_TOUCH_TOOL_DAMAGE.get() && hasSilkTouch) {
+        if (SettingKey.APPLY_SILK_TOUCH_TOOL_DAMAGE.get() && hasSilkTouch) {
             return treeBlocks.size();
         } else {
             return treeBlocks.getLogBlocks().size();

@@ -6,7 +6,7 @@ import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.config.SettingsKey;
+import dev.rosewood.rosetimber.config.SettingKey;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
@@ -354,7 +354,7 @@ public class TreeDefinitionManager extends Manager {
      * @return True if the tool is allowed for toppling any trees
      */
     public boolean isToolValidForAnyTreeDefinition(ItemStack tool) {
-        if (SettingsKey.IGNORE_REQUIRED_TOOLS.get())
+        if (SettingKey.IGNORE_REQUIRED_TOOLS.get())
             return true;
         for (TreeDefinition treeDefinition : this.treeDefinitions)
             for (ItemStack requiredTool : treeDefinition.getRequiredTools())
@@ -374,7 +374,7 @@ public class TreeDefinitionManager extends Manager {
      * @return True if the tool is allowed for toppling the given TreeDefinition
      */
     public boolean isToolValidForTreeDefinition(TreeDefinition treeDefinition, ItemStack tool) {
-        if (SettingsKey.IGNORE_REQUIRED_TOOLS.get())
+        if (SettingKey.IGNORE_REQUIRED_TOOLS.get())
             return true;
         for (ItemStack requiredTool : treeDefinition.getRequiredTools())
             if (requiredTool.getType().equals(tool.getType()))
@@ -396,9 +396,9 @@ public class TreeDefinitionManager extends Manager {
     public void dropTreeLoot(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock, Player player, boolean hasSilkTouch, boolean isForEntireTree) {
         HookManager hookManager = this.rosePlugin.getManager(HookManager.class);
 
-        boolean addToInventory = SettingsKey.ADD_ITEMS_TO_INVENTORY.get();
+        boolean addToInventory = SettingKey.ADD_ITEMS_TO_INVENTORY.get();
         boolean hasBonusChance = player.hasPermission("rosetimber.bonusloot");
-        double bonusMultiplier = hasBonusChance ? SettingsKey.BONUS_LOOT_MULTIPLIER.get() : 1;
+        double bonusMultiplier = hasBonusChance ? SettingKey.BONUS_LOOT_MULTIPLIER.get() : 1;
         List<ItemStack> lootedItems = new ArrayList<>();
         List<String> lootedCommands = new ArrayList<>();
         List<TreeLootResult> results = new ArrayList<>();
@@ -408,7 +408,7 @@ public class TreeDefinitionManager extends Manager {
             results.add(treeDefinition.getEntireTreeLoot().roll(bonusMultiplier));
             results.add(this.globalEntireTreeLoot.roll(bonusMultiplier));
         } else {
-            if (SettingsKey.APPLY_SILK_TOUCH.get() && hasSilkTouch) {
+            if (SettingKey.APPLY_SILK_TOUCH.get() && hasSilkTouch) {
                 if (hookManager.shouldApplyDoubleDropsHooks(player))
                     lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
                 lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));

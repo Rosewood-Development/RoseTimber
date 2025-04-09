@@ -2,7 +2,7 @@ package dev.rosewood.rosetimber.manager;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
-import dev.rosewood.rosetimber.config.SettingsKey;
+import dev.rosewood.rosetimber.config.SettingKey;
 import dev.rosewood.rosetimber.hook.CoreProtectHook;
 import dev.rosewood.rosetimber.hook.McMMOHook;
 import dev.rosewood.rosetimber.hook.TimberHook;
@@ -69,7 +69,7 @@ public class HookManager extends Manager {
     public void applyExperienceHooks(Player player, TreeBlockSet<Block> treeBlocks) {
         for (TimberHook hook : this.hooks) {
             // mcMMO
-            if (SettingsKey.HOOKS_MCMMO_APPLY_EXPERIENCE.get())
+            if (SettingKey.HOOKS_MCMMO_APPLY_EXPERIENCE.get())
                 hook.applyExperience(player, treeBlocks, false);
         }
     }
@@ -80,7 +80,7 @@ public class HookManager extends Manager {
      * @param player The player to check
      */
     public boolean shouldApplyDoubleDropsHooks(Player player) {
-        if (!SettingsKey.HOOKS_APPLY_EXTRA_DROPS.get())
+        if (!SettingKey.HOOKS_APPLY_EXTRA_DROPS.get())
             return false;
 
         for (TimberHook hook : this.hooks)
@@ -95,7 +95,7 @@ public class HookManager extends Manager {
      * @param player The player to check
      */
     public boolean isUsingAbilityHooks(Player player) {
-        if (!SettingsKey.HOOKS_REQUIRE_ABILITY_ACTIVE.get() || this.hooks.isEmpty())
+        if (!SettingKey.HOOKS_REQUIRE_ABILITY_ACTIVE.get() || this.hooks.isEmpty())
             return true;
 
         for (TimberHook hook : this.hooks)

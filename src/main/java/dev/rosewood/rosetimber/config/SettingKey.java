@@ -18,7 +18,7 @@ import static dev.rosewood.rosegarden.config.RoseSettingSerializers.INTEGER;
 import static dev.rosewood.rosegarden.config.RoseSettingSerializers.STRING;
 import static dev.rosewood.rosegarden.config.RoseSettingSerializers.STRING_LIST;
 
-public class SettingsKey {
+public class SettingKey {
 
     private static final List<RoseSetting<?>> KEYS = new ArrayList<>();
 

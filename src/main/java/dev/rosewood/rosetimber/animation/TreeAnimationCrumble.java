@@ -1,7 +1,7 @@
 package dev.rosewood.rosetimber.animation;
 
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.config.SettingsKey;
+import dev.rosewood.rosetimber.config.SettingKey;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.FallingTreeBlock;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
@@ -28,8 +28,8 @@ public class TreeAnimationCrumble extends TreeAnimation {
     public void playAnimation(Runnable whenFinished) {
         RoseTimber roseTimber = RoseTimber.getInstance();
 
-        boolean useCustomSound = SettingsKey.USE_CUSTOM_SOUNDS.get();
-        boolean useCustomParticles = SettingsKey.USE_CUSTOM_PARTICLES.get();
+        boolean useCustomSound = SettingKey.USE_CUSTOM_SOUNDS.get();
+        boolean useCustomParticles = SettingKey.USE_CUSTOM_PARTICLES.get();
 
         // Order blocks by y-axis, lowest first, but shuffled randomly
         int currentY = -1;

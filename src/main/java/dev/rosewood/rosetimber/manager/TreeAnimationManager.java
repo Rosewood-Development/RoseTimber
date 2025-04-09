@@ -7,7 +7,7 @@ import dev.rosewood.rosetimber.animation.TreeAnimationCrumble;
 import dev.rosewood.rosetimber.animation.TreeAnimationDisintegrate;
 import dev.rosewood.rosetimber.animation.TreeAnimationNone;
 import dev.rosewood.rosetimber.animation.TreeAnimationTopple;
-import dev.rosewood.rosetimber.config.SettingsKey;
+import dev.rosewood.rosetimber.config.SettingKey;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
@@ -179,8 +179,8 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
      */
     public void runFallingBlockImpact(TreeAnimation treeAnimation, ITreeBlock<FallingBlock> treeBlock) {
         TreeDefinitionManager treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
-        boolean useCustomSound = SettingsKey.USE_CUSTOM_SOUNDS.get();
-        boolean useCustomParticles = SettingsKey.USE_CUSTOM_PARTICLES.get();
+        boolean useCustomSound = SettingKey.USE_CUSTOM_SOUNDS.get();
+        boolean useCustomParticles = SettingKey.USE_CUSTOM_PARTICLES.get();
         TreeDefinition treeDefinition = treeAnimation.getDetectedTree().getTreeDefinition();
 
         if (useCustomParticles)
@@ -204,8 +204,8 @@ public class TreeAnimationManager extends Manager implements Listener, Runnable 
         if (treeAnimation == null)
             return;
 
-        if (SettingsKey.FALLING_BLOCKS_DEAL_DAMAGE.get()) {
-            int damage = SettingsKey.FALLING_BLOCK_DAMAGE.get();
+        if (SettingKey.FALLING_BLOCKS_DEAL_DAMAGE.get()) {
+            int damage = SettingKey.FALLING_BLOCK_DAMAGE.get();
             for (Entity entity : fallingBlock.getNearbyEntities(0.5, 0.5, 0.5)) {
                 if (!(entity instanceof Damageable))
                     continue;
