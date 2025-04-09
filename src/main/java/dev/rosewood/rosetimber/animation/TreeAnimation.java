@@ -107,7 +107,7 @@ public abstract class TreeAnimation {
      */
     public void playFallingParticles(ITreeBlock<?> treeBlock) {
         Location location = treeBlock.getLocation().clone().add(0.5, 0.5, 0.5);
-        treeBlock.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 10, treeBlock.getBlockData());
+        treeBlock.getWorld().spawnParticle(Particle.BLOCK, location, 10, treeBlock.getBlockData());
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class TreeAnimation {
      */
     public void playLandingParticles(ITreeBlock<?> treeBlock) {
         Location location = treeBlock.getLocation().clone().add(0.5, 0.5, 0.5);
-        treeBlock.getWorld().spawnParticle(Particle.BLOCK_CRACK, location, 10, treeBlock.getBlockData());
+        treeBlock.getWorld().spawnParticle(Particle.BLOCK_CRUMBLE, location, 10, treeBlock.getBlockData());
     }
 
     /**

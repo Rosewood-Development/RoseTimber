@@ -1,7 +1,7 @@
 package dev.rosewood.rosetimber.animation;
 
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.manager.TreeDefinitionManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
@@ -19,10 +19,10 @@ public class TreeAnimationNone extends TreeAnimation {
     public void playAnimation(Runnable whenFinished) {
         TreeDefinitionManager treeDefinitionManager = RoseTimber.getInstance().getManager(TreeDefinitionManager.class);
 
-        if (Setting.USE_CUSTOM_SOUNDS.getBoolean())
+        if (SettingsKey.USE_CUSTOM_SOUNDS.get())
             this.playFallingSound(this.detectedTree.getDetectedTreeBlocks().getInitialLogBlock());
 
-        if (Setting.USE_CUSTOM_PARTICLES.getBoolean())
+        if (SettingsKey.USE_CUSTOM_PARTICLES.get())
             for (ITreeBlock<Block> treeBlock : this.detectedTree.getDetectedTreeBlocks().getAllTreeBlocks())
                 this.playFallingParticles(treeBlock);
 

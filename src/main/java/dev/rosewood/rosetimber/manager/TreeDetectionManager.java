@@ -2,7 +2,7 @@ package dev.rosewood.rosetimber.manager;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlock;
@@ -59,11 +59,11 @@ public class TreeDetectionManager extends Manager {
     public void reload() {
         this.treeDefinitionManager = this.rosePlugin.getManager(TreeDefinitionManager.class);
         this.placedBlockManager = this.rosePlugin.getManager(PlacedBlockManager.class);
-        this.maxLogBlocksAllowed = Setting.MAX_LOGS_PER_CHOP.getInt();
-        this.numLeavesRequiredForTree = Setting.LEAVES_REQUIRED_FOR_TREE.getInt();
+        this.maxLogBlocksAllowed = SettingsKey.MAX_LOGS_PER_CHOP.get();
+        this.numLeavesRequiredForTree = SettingsKey.LEAVES_REQUIRED_FOR_TREE.get();
 //        this.onlyBreakLogsUpwards = Setting.ONLY_DETECT_LOGS_UPWARDS.getBoolean();
-        this.entireTreeBase = Setting.BREAK_ENTIRE_TREE_BASE.getBoolean();
-        this.destroyLeaves = Setting.DESTROY_LEAVES.getBoolean();
+        this.entireTreeBase = SettingsKey.BREAK_ENTIRE_TREE_BASE.get();
+        this.destroyLeaves = SettingsKey.DESTROY_LEAVES.get();
     }
 
     @Override

@@ -1,12 +1,13 @@
 package dev.rosewood.rosetimber;
 
 import dev.rosewood.rosegarden.RosePlugin;
+import dev.rosewood.rosegarden.config.RoseSetting;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.listener.TreeFallListener;
 import dev.rosewood.rosetimber.manager.ChoppingManager;
 import dev.rosewood.rosetimber.manager.CommandManager;
-import dev.rosewood.rosetimber.manager.ConfigurationManager;
 import dev.rosewood.rosetimber.manager.HookManager;
 import dev.rosewood.rosetimber.manager.LocaleManager;
 import dev.rosewood.rosetimber.manager.PlacedBlockManager;
@@ -16,6 +17,7 @@ import dev.rosewood.rosetimber.manager.TreeDefinitionManager;
 import dev.rosewood.rosetimber.manager.TreeDetectionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class RoseTimber extends RosePlugin {
     }
 
     public RoseTimber() {
-        super(-1, 7599, ConfigurationManager.class, null, LocaleManager.class, CommandManager.class);
+        super(-1, 7599, null, LocaleManager.class, CommandManager.class);
 
         instance = this;
     }
@@ -70,4 +72,20 @@ public class RoseTimber extends RosePlugin {
         );
     }
 
+    @Override
+    protected @NotNull List<RoseSetting<?>> getRoseConfigSettings() {
+        return SettingsKey.getKeys();
+    }
+
+    @Override
+    protected @NotNull String[] getRoseConfigHeader() {
+        return new String[]{
+                "__________                  ___________ __       ___",
+                "\\______   \\ ____  ______ ___\\__    ___/|__| _____\\_ |__   ___________",
+                " |       _//  _ \\/  ___// __ \\|    |   |  |/     \\| __ \\_/ __ \\_  __ \\",
+                " |    |   (  <_> )___ \\\\  ___/|    |   |  |  Y Y  \\ \\_\\ \\  ___/|  | \\/",
+                " |____|_  /\\____/____  >\\___  >____|   |__|__|_|  /___  /\\___  >__|",
+                "        \\/           \\/     \\/                  \\/    \\/     \\/"
+        };
+    }
 }

@@ -1,7 +1,7 @@
 package dev.rosewood.rosetimber.animation;
 
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.manager.TreeAnimationManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.FallingTreeBlock;
@@ -24,8 +24,8 @@ public class TreeAnimationTopple extends TreeAnimation {
     public void playAnimation(Runnable whenFinished) {
         RoseTimber roseTimber = RoseTimber.getInstance();
 
-        boolean useCustomSound = Setting.USE_CUSTOM_SOUNDS.getBoolean();
-        boolean useCustomParticles = Setting.USE_CUSTOM_PARTICLES.getBoolean();
+        boolean useCustomSound = SettingsKey.USE_CUSTOM_SOUNDS.get();
+        boolean useCustomParticles = SettingsKey.USE_CUSTOM_PARTICLES.get();
 
         ITreeBlock<Block> initialTreeBlock = this.detectedTree.getDetectedTreeBlocks().getInitialLogBlock();
         FallingTreeBlock initialFallingBlock = this.convertToFallingBlock((TreeBlock) this.detectedTree.getDetectedTreeBlocks().getInitialLogBlock());

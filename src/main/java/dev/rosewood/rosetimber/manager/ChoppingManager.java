@@ -3,7 +3,7 @@ package dev.rosewood.rosetimber.manager;
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,8 +29,8 @@ public class ChoppingManager extends Manager {
 
     @Override
     public void reload() {
-        this.useCooldown = Setting.PLAYER_TREE_TOPPLE_COOLDOWN.getBoolean();
-        this.cooldownAmount = Setting.PLAYER_TREE_TOPPLE_COOLDOWN_LENGTH.getInt();
+        this.useCooldown = SettingsKey.PLAYER_TREE_TOPPLE_COOLDOWN.get();
+        this.cooldownAmount = SettingsKey.PLAYER_TREE_TOPPLE_COOLDOWN_LENGTH.get();
     }
 
     @Override

@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'com.gradleup.shadow' version '8.3.5'
     id 'java-library'
     id 'maven-publish'
 }
@@ -10,7 +10,10 @@ group 'dev.rosewood'
 version '1.0.0-SNAPSHOT'
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    disableAutoTargetJvm()
 }
 
 compileJava {
@@ -43,15 +46,15 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
 
     // Plugin Hooks
-    compileOnly 'net.coreprotect:coreprotect:19.4'
+    compileOnly 'net.coreprotect:coreprotect:22.4'
     compileOnly 'com.gmail.nossr50:mcmmo:2.1.209'
 //    compileOnly 'com.github.Zrips:Jobs:4.17.2' // Future Problem
 
     // From our repo
-    api 'dev.rosewood:rosegarden:1.1.0.48-SNAPSHOT'
+    api 'dev.rosewood:rosegarden:1.4.7'
 }
 
 shadowJar {
@@ -69,17 +72,15 @@ processResources {
 }
 
 publishing {
-//    This sounds like a nicole thing to do
-//    publications {
-//        shadow(MavenPublication) { publication ->
-//            project.shadow.component(publication)
-//            artifactId = 'rosetimber'
-//            pom {
-//                name = 'rosetimber'
-//            }
-//        }
-//    }
-//
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+            artifactId = 'rosetimber'
+            pom {
+                name = 'rosetimber'
+            }
+        }
+    }
     repositories {
         if (project.hasProperty('mavenUser') && project.hasProperty('mavenPassword')) {
             maven {

@@ -74,7 +74,7 @@ public class TimberUtils {
         if (tool.getType().getMaxDurability() < 1 || (tool.getItemMeta() != null && tool.getItemMeta().isUnbreakable()))
             return;
 
-        int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY);
+        int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.UNBREAKING);
         Damageable damageable = (Damageable) tool.getItemMeta();
 
         int actualDamage = 0;

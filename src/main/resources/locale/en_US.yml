@@ -1,0 +1,43 @@
+# Plugin Message Prefix
+prefix: "&7[<g:#8A2387:#E94057:#F27121>RoseTimber&7] "
+
+# Base Command Message
+base-command-color: "&e"
+base-command-help: "&eUse &b/%cmd% help &efor command information."
+
+# Help Command
+command-help-description: "Displays the help menu... You have arrived"
+command-help-title: "&eAvailable Commands:"
+command-help-list-description: "&8 - &d/%cmd% %subcmd% %args% &7- %desc%"
+command-help-list-description-no-args: "&8 - &d/%cmd% %subcmd% &7- %desc%"
+
+# Reload Command
+command-reload-description: "Reloads the plugin"
+command-reload-reloaded: "&ePlugin data, configuration, and locale files were reloaded"
+
+# Toggle Command
+command-toggle-description: "Toggles your chopping mode"
+command-toggle-enabled: "&eTree chopping is now &aenabled&e."
+command-toggle-disabled: "&eTree chopping is now &cdisabled&e."
+
+# Cooldown Message
+on-cooldown: "&eYou are on cooldown and cannot topple trees right now."
+
+# Generic Command Messages
+no-permission: "&cYou don't have permission for that!"
+only-player: "&cThis command can only be executed by a player."
+unknown-command: "&cUnknown command, use &b/%cmd% help &cfor more info."
+unknown-command-error: "&cAn unknown error occurred; details have been printed to console. Please contact a server administrator."
+invalid-subcommand: "&cInvalid subcommand."
+invalid-argument: "&cInvalid argument: %message%."
+invalid-argument-null: "&cInvalid argument: %name% was null."
+missing-arguments: "&cMissing arguments, &b%amount% &crequired."
+missing-arguments-extra: "&cMissing arguments, &b%amount%+ &crequired."
+
+# Argument Handler Error Messages
+argument-handler-enum: "%enum% type [%input%] does not exist"
+argument-handler-enum-list: "%enum% type [%input%] does not exist. Valid types: %types%"
+argument-handler-string: "String cannot be empty"
+argument-handler-integer: "Integer [%input%] must be a whole number between -2^31 and 2^31-1 inclusively"
+argument-handler-player: "No Player with the username [%input%] was found online"
+argument-handler-material: "No material with the name [%input%] was found"

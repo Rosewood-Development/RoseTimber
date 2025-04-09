@@ -2,7 +2,7 @@ package dev.rosewood.rosetimber.manager;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
@@ -46,7 +46,7 @@ public class SaplingManager extends Manager {
      * @param treeBlock      The ITreeBlock to replant for
      */
     public void replantSapling(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock) {
-        if (!Setting.REPLANT_SAPLINGS.getBoolean())
+        if (!SettingsKey.REPLANT_SAPLINGS.get())
             return;
 
         Block block = treeBlock.getLocation().getBlock();
@@ -64,10 +64,10 @@ public class SaplingManager extends Manager {
      * @param treeBlock      The ITreeBlock to replant for
      */
     public void replantSaplingWithChance(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock) {
-        if (!Setting.FALLING_BLOCKS_REPLANT_SAPLINGS.getBoolean() || !treeBlock.getLocation().getBlock().getType().equals(Material.AIR))
+        if (!SettingsKey.FALLING_BLOCKS_REPLANT_SAPLINGS.get() || !treeBlock.getLocation().getBlock().getType().equals(Material.AIR))
             return;
 
-        double chance = Setting.FALLING_BLOCKS_REPLANT_SAPLINGS_CHANCE.getDouble();
+        double chance = SettingsKey.FALLING_BLOCKS_REPLANT_SAPLINGS_CHANCE.get();
         if (this.random.nextDouble() > chance / 100)
             return;
 
@@ -98,7 +98,7 @@ public class SaplingManager extends Manager {
 
         block.setType(treeDefinition.getSaplingBlockType());
 
-        int cooldown = Setting.REPLANT_SAPLINGS_COOLDOWN.getInt();
+        int cooldown = SettingsKey.REPLANT_SAPLINGS_COOLDOWN.get();
         if (cooldown != 0) {
             this.protectedSaplings.add(block.getLocation());
             Bukkit.getScheduler().runTaskLater(this.rosePlugin, () -> this.protectedSaplings.remove(block.getLocation()), cooldown * 20L);

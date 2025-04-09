@@ -1,7 +1,7 @@
 package dev.rosewood.rosetimber.animation;
 
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.manager.TreeDefinitionManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
@@ -30,8 +30,8 @@ public class TreeAnimationDisintegrate extends TreeAnimation {
         RoseTimber roseTimber = RoseTimber.getInstance();
         TreeDefinitionManager treeDefinitionManager = roseTimber.getManager(TreeDefinitionManager.class);
 
-        boolean useCustomSound = Setting.USE_CUSTOM_SOUNDS.getBoolean();
-        boolean useCustomParticles = Setting.USE_CUSTOM_PARTICLES.getBoolean();
+        boolean useCustomSound = SettingsKey.USE_CUSTOM_SOUNDS.get();
+        boolean useCustomParticles = SettingsKey.USE_CUSTOM_PARTICLES.get();
 
         List<ITreeBlock<Block>> orderedLogBlocks = new ArrayList<>(this.detectedTree.getDetectedTreeBlocks().getLogBlocks());
         orderedLogBlocks.sort(Comparator.comparingInt(x -> x.getLocation().getBlockY()));

@@ -6,7 +6,7 @@ import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import dev.rosewood.rosetimber.RoseTimber;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
 import dev.rosewood.rosetimber.tree.TreeDefinition;
@@ -241,7 +241,7 @@ public class TreeDefinitionManager extends Manager {
                 "Applies to all tree types"
         );
 
-        config.save();
+        config.save(file);
     }
 
     /**
@@ -341,7 +341,7 @@ public class TreeDefinitionManager extends Manager {
      * @return True if the tool is allowed for toppling any trees
      */
     public boolean isToolValidForAnyTreeDefinition(ItemStack tool) {
-        if (Setting.IGNORE_REQUIRED_TOOLS.getBoolean())
+        if (SettingsKey.IGNORE_REQUIRED_TOOLS.get())
             return true;
         for (TreeDefinition treeDefinition : this.treeDefinitions)
             for (ItemStack requiredTool : treeDefinition.getRequiredTools())
@@ -361,7 +361,7 @@ public class TreeDefinitionManager extends Manager {
      * @return True if the tool is allowed for toppling the given TreeDefinition
      */
     public boolean isToolValidForTreeDefinition(TreeDefinition treeDefinition, ItemStack tool) {
-        if (Setting.IGNORE_REQUIRED_TOOLS.getBoolean())
+        if (SettingsKey.IGNORE_REQUIRED_TOOLS.get())
             return true;
         for (ItemStack requiredTool : treeDefinition.getRequiredTools())
             if (requiredTool.getType().equals(tool.getType()))
@@ -383,9 +383,9 @@ public class TreeDefinitionManager extends Manager {
     public void dropTreeLoot(TreeDefinition treeDefinition, ITreeBlock<?> treeBlock, Player player, boolean hasSilkTouch, boolean isForEntireTree) {
         HookManager hookManager = this.rosePlugin.getManager(HookManager.class);
 
-        boolean addToInventory = Setting.ADD_ITEMS_TO_INVENTORY.getBoolean();
+        boolean addToInventory = SettingsKey.ADD_ITEMS_TO_INVENTORY.get();
         boolean hasBonusChance = player.hasPermission("rosetimber.bonusloot");
-        double bonusMultiplier = hasBonusChance ? Setting.BONUS_LOOT_MULTIPLIER.getDouble() : 1;
+        double bonusMultiplier = hasBonusChance ? SettingsKey.BONUS_LOOT_MULTIPLIER.get() : 1;
         List<ItemStack> lootedItems = new ArrayList<>();
         List<String> lootedCommands = new ArrayList<>();
         List<TreeLootResult> results = new ArrayList<>();
@@ -395,7 +395,7 @@ public class TreeDefinitionManager extends Manager {
             results.add(treeDefinition.getEntireTreeLoot().roll(bonusMultiplier));
             results.add(this.globalEntireTreeLoot.roll(bonusMultiplier));
         } else {
-            if (Setting.APPLY_SILK_TOUCH.getBoolean() && hasSilkTouch) {
+            if (SettingsKey.APPLY_SILK_TOUCH.get() && hasSilkTouch) {
                 if (hookManager.shouldApplyDoubleDropsHooks(player))
                     lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
                 lootedItems.addAll(TimberUtils.getBlockDrops(treeBlock));
@@ -452,11 +452,11 @@ public class TreeDefinitionManager extends Manager {
 
         // Run looted commands
         StringPlaceholders placeholders = StringPlaceholders.builder("player", player.getName())
-                .addPlaceholder("type", treeDefinition.getKey())
-                .addPlaceholder("xPos", treeBlock.getLocation().getBlockX())
-                .addPlaceholder("yPos", treeBlock.getLocation().getBlockY())
-                .addPlaceholder("zPos", treeBlock.getLocation().getBlockZ())
-                .addPlaceholder("world", treeBlock.getWorld().getName())
+                .add("type", treeDefinition.getKey())
+                .add("xPos", treeBlock.getLocation().getBlockX())
+                .add("yPos", treeBlock.getLocation().getBlockY())
+                .add("zPos", treeBlock.getLocation().getBlockZ())
+                .add("world", treeBlock.getWorld().getName())
                 .build();
 
         lootedCommands.stream()

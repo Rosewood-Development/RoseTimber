@@ -2,8 +2,8 @@ package dev.rosewood.rosetimber.manager;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
+import dev.rosewood.rosetimber.config.SettingsKey;
 import dev.rosewood.rosetimber.events.TreeFellEvent;
-import dev.rosewood.rosetimber.manager.ConfigurationManager.Setting;
 import dev.rosewood.rosetimber.tree.ITreeBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -37,8 +37,8 @@ public class PlacedBlockManager extends Manager implements Listener {
 
     @Override
     public void reload() {
-        this.ignorePlacedBlocks = Setting.IGNORE_PLACED_BLOCKS.getBoolean();
-        this.maxPlacedBlockMemorySize = Setting.IGNORE_PLACED_BLOCKS_MEMORY_SIZE.getInt();
+        this.ignorePlacedBlocks = SettingsKey.IGNORE_PLACED_BLOCKS.get();
+        this.maxPlacedBlockMemorySize = SettingsKey.IGNORE_PLACED_BLOCKS_MEMORY_SIZE.get();
 
         // Ensures the oldest entry is removed if it exceeds the limit
         this.placedBlocks = Collections.newSetFromMap(new LinkedHashMap<>() {
