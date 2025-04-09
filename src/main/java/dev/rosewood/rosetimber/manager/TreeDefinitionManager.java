@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,6 +59,11 @@ public class TreeDefinitionManager extends Manager {
 
         // Load tree settings
         ConfigurationSection treeSection = config.getConfigurationSection("trees");
+        if (treeSection == null) {
+            this.rosePlugin.getLogger().severe("Failed to log tree-definitions.yml due to missing configuration section 'trees'");
+            return;
+        }
+        
         for (String key : treeSection.getKeys(false)) {
             ConfigurationSection tree = treeSection.getConfigurationSection(key);
 
@@ -171,6 +177,13 @@ public class TreeDefinitionManager extends Manager {
         if (file.exists())
             return;
 
+        try {
+            file.createNewFile();
+        } catch (IOException ex) {
+            this.rosePlugin.getLogger().severe("Failed to create 'tree-definitions' file: " + ex.getMessage());
+            return;
+        }
+        
         CommentedFileConfiguration config = CommentedFileConfiguration.loadConfiguration(file);
         config.addComments(
                 "Tree configuration",
