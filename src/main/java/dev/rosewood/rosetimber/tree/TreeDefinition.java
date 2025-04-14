@@ -21,7 +21,6 @@ public class TreeDefinition {
     private final boolean detectLeavesDiagonally;
     private final boolean dropOriginalLog, dropOriginalLeaf;
     private final boolean scatterTreeBlocksOnGround;
-    private final boolean onlyDetectUpwards;
     private final TreeLoot logLoot, leafLoot, entireTreeLoot;
     private final List<ItemStack> requiredTools;
     private final List<String> treeAnimationTypes;
@@ -29,7 +28,7 @@ public class TreeDefinition {
     public TreeDefinition(String key, List<Material> logBlockTypes, List<Material> leafBlockTypes, Material saplingBlockTypes,
                           List<Material> plantableSoilBlockTypes, double maxLogDistanceFromTrunk, double maxLeafDistanceFromLog,
                           boolean detectLeavesDiagonally, boolean dropOriginalLog, boolean dropOriginalLeaf,
-                          boolean scatterTreeBlocksOnGround, boolean onlyDetectUpwards, TreeLoot logLoot, TreeLoot leafLoot, TreeLoot entireTreeLoot,
+                          boolean scatterTreeBlocksOnGround, TreeLoot logLoot, TreeLoot leafLoot, TreeLoot entireTreeLoot,
                           List<ItemStack> requiredTools, List<String> treeAnimationTypes) {
         this.key = key;
         this.logBlockTypes = logBlockTypes;
@@ -42,7 +41,6 @@ public class TreeDefinition {
         this.dropOriginalLog = dropOriginalLog;
         this.dropOriginalLeaf = dropOriginalLeaf;
         this.scatterTreeBlocksOnGround = scatterTreeBlocksOnGround;
-        this.onlyDetectUpwards = onlyDetectUpwards;
         this.logLoot = logLoot;
         this.leafLoot = leafLoot;
         this.entireTreeLoot = entireTreeLoot;
@@ -193,7 +191,7 @@ public class TreeDefinition {
         treeDefinitions.add(new TreeDefinition(
                 "oak",
                 List.of(Material.OAK_LOG, Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD),
-                List.of(Material.OAK_LEAVES, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES),
+                List.of(Material.OAK_LEAVES),
                 Material.OAK_SAPLING,
                 new ArrayList<>(),
                 6,
@@ -202,7 +200,6 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.OAK_SAPLING), null),
@@ -226,7 +223,6 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.SPRUCE_SAPLING), null),
@@ -249,7 +245,6 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.BIRCH_SAPLING), null),
@@ -272,7 +267,6 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(2.5, new ItemStack(Material.JUNGLE_SAPLING), null),
@@ -295,7 +289,6 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.ACACIA_SAPLING), null),
@@ -318,7 +311,6 @@ public class TreeDefinition {
                 true,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(5, new ItemStack(Material.DARK_OAK_SAPLING), null),
@@ -342,8 +334,6 @@ public class TreeDefinition {
                 false,
                 false,
                 false,
-                true,
-
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(100, new ItemStack(Material.BROWN_MUSHROOM), null, -6, 2)
@@ -365,7 +355,6 @@ public class TreeDefinition {
                 false,
                 false,
                 false,
-                true,
                 TreeLootPool.empty(),
                 new TreeLootPool(
                         new TreeLootEntry(100, new ItemStack(Material.RED_MUSHROOM), null, -6, 2)
@@ -389,7 +378,6 @@ public class TreeDefinition {
                     true,
                     true,
                     false,
-                    true,
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
@@ -409,14 +397,43 @@ public class TreeDefinition {
                     true,
                     true,
                     false,
-                    true,
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
                     TreeLootPool.empty(),
                     new ArrayList<>(),
                     Collections.singletonList("TOPPLE")
             ));
+        }
 
+        // Azalea
+        if (NMSUtil.getVersionNumber() >= 17) {
+            treeDefinitions.add(new TreeDefinition(
+                    "azalea",
+                    List.of(Material.OAK_LOG, Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD),
+                    List.of(Material.OAK_LEAVES, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES),
+                    Material.AZALEA,
+                    new ArrayList<>(),
+                    6,
+                    6,
+                    true,
+                    true,
+                    false,
+                    false,
+                    TreeLootPool.empty(),
+                    new TreeLootPool(
+                            new TreeLootEntry(2.5, new ItemStack(Material.OAK_SAPLING), null),
+                            new TreeLootEntry(2.5, new ItemStack(Material.AZALEA), null),
+                            new TreeLootEntry(2, new ItemStack(Material.STICK), null, 1, 2),
+                            new TreeLootEntry(0.5, new ItemStack(Material.APPLE), null)
+                    ),
+                    TreeLootPool.empty(),
+                    new ArrayList<>(),
+                    Collections.singletonList("TOPPLE")
+            ));
+        }
+
+        // Mangrove
+        if (NMSUtil.getVersionNumber() >= 19) {
             treeDefinitions.add(new TreeDefinition(
                     "mangrove",
                     List.of(Material.MANGROVE_LOG, Material.STRIPPED_MANGROVE_LOG, Material.MANGROVE_WOOD, Material.STRIPPED_MANGROVE_WOOD, Material.MANGROVE_ROOTS, Material.MUDDY_MANGROVE_ROOTS),
@@ -429,9 +446,58 @@ public class TreeDefinition {
                     true,
                     false,
                     false,
-                    true,
                     TreeLootPool.empty(),
                     new TreeLootPool(
+                            new TreeLootEntry(2, new ItemStack(Material.STICK), null)
+                    ),
+                    TreeLootPool.empty(),
+                    new ArrayList<>(),
+                    Collections.singletonList("TOPPLE")
+            ));
+        }
+
+        // Cherry Blossom
+        if (NMSUtil.getVersionNumber() > 19 || (NMSUtil.getVersionNumber() == 19 && NMSUtil.getMinorVersionNumber() >= 4)) {
+            treeDefinitions.add(new TreeDefinition(
+                    "cherry_blossom",
+                    List.of(Material.CHERRY_LOG, Material.STRIPPED_CHERRY_LOG, Material.CHERRY_WOOD, Material.STRIPPED_CHERRY_WOOD),
+                    Collections.singletonList(Material.CHERRY_LEAVES),
+                    Material.CHERRY_SAPLING,
+                    new ArrayList<>(),
+                    8,
+                    5,
+                    false,
+                    true,
+                    false,
+                    false,
+                    TreeLootPool.empty(),
+                    new TreeLootPool(
+                            new TreeLootEntry(5, new ItemStack(Material.CHERRY_SAPLING), null),
+                            new TreeLootEntry(2, new ItemStack(Material.STICK), null)
+                    ),
+                    TreeLootPool.empty(),
+                    new ArrayList<>(),
+                    Collections.singletonList("TOPPLE")
+            ));
+        }
+
+        // Pale Oak
+        if (NMSUtil.getVersionNumber() > 21 || (NMSUtil.getVersionNumber() == 21 && NMSUtil.getMinorVersionNumber() >= 4)) {
+            treeDefinitions.add(new TreeDefinition(
+                    "pale_oak",
+                    List.of(Material.PALE_OAK_LOG, Material.STRIPPED_PALE_OAK_LOG, Material.PALE_OAK_WOOD, Material.STRIPPED_PALE_OAK_WOOD),
+                    Collections.singletonList(Material.PALE_OAK_LEAVES),
+                    Material.PALE_OAK_SAPLING,
+                    new ArrayList<>(),
+                    3,
+                    5,
+                    true,
+                    true,
+                    false,
+                    false,
+                    TreeLootPool.empty(),
+                    new TreeLootPool(
+                            new TreeLootEntry(5, new ItemStack(Material.PALE_OAK_SAPLING), null),
                             new TreeLootEntry(2, new ItemStack(Material.STICK), null)
                     ),
                     TreeLootPool.empty(),
@@ -447,7 +513,11 @@ public class TreeDefinition {
      * @return the default plantable soils for all tree definitions
      */
     public static List<Material> getDefaultGlobalPlantableSoils() {
-        return List.of(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT, Material.PODZOL);
+        if (NMSUtil.getVersionNumber() >= 17) {
+            return List.of(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT, Material.PODZOL, Material.ROOTED_DIRT);
+        } else {
+            return List.of(Material.GRASS_BLOCK, Material.DIRT, Material.COARSE_DIRT, Material.PODZOL);
+        }
     }
 
     /**

@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class TimberUtils {
 
-    private static final Random RANDOM = new Random();
+    public static final Random RANDOM = new Random();
 
     /**
      * Check if durbility should be applied based on the unbreaking enchantment

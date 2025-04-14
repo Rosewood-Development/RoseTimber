@@ -77,7 +77,6 @@ public class TreeDefinitionManager extends Manager {
             boolean dropOriginalLog;
             boolean dropOriginalLeaf;
             boolean scatterTreeBlocksOnGround;
-            boolean onlyDetectUpwards;
             TreeLoot logLoot, leafLoot, entireTreeLoot;
             List<ItemStack> requiredTools = new ArrayList<>();
             List<String> treeAnimationTypes;
@@ -99,7 +98,6 @@ public class TreeDefinitionManager extends Manager {
             dropOriginalLog = tree.getBoolean("drop-original-log");
             dropOriginalLeaf = tree.getBoolean("drop-original-leaf");
             scatterTreeBlocksOnGround = tree.getBoolean("scatter-tree-blocks-on-ground");
-            onlyDetectUpwards = tree.getBoolean("only-detect-upwards");
 
             ConfigurationSection logLootSection = tree.getConfigurationSection("log-loot");
             if (logLootSection != null) {
@@ -128,7 +126,7 @@ public class TreeDefinitionManager extends Manager {
             treeAnimationTypes = tree.getStringList("tree-animation-types");
 
             this.treeDefinitions.add(new TreeDefinition(key, logBlockTypes, leafBlockTypes, saplingBlockType, plantableSoilBlockTypes, maxLogDistanceFromTrunk,
-                    maxLeafDistanceFromLog, detectLeavesDiagonally, dropOriginalLog, dropOriginalLeaf, scatterTreeBlocksOnGround, onlyDetectUpwards, logLoot, leafLoot,
+                    maxLeafDistanceFromLog, detectLeavesDiagonally, dropOriginalLog, dropOriginalLeaf, scatterTreeBlocksOnGround, logLoot, leafLoot,
                     entireTreeLoot, requiredTools, treeAnimationTypes));
         }
 

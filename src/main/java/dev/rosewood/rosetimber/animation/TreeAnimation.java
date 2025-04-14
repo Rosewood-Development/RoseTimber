@@ -1,5 +1,6 @@
 package dev.rosewood.rosetimber.animation;
 
+import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosetimber.RoseTimber;
 import dev.rosewood.rosetimber.manager.SaplingManager;
 import dev.rosewood.rosetimber.tree.DetectedTree;
@@ -8,6 +9,9 @@ import dev.rosewood.rosetimber.tree.ITreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlock;
 import dev.rosewood.rosetimber.tree.TreeBlockSet;
 import dev.rosewood.rosetimber.tree.TreeBlockType;
+import dev.rosewood.rosetimber.utils.TimberUtils;
+import dev.rosewood.rosetimber.utils.VersionUtils;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -107,7 +111,22 @@ public abstract class TreeAnimation {
      */
     public void playFallingParticles(ITreeBlock<?> treeBlock) {
         Location location = treeBlock.getLocation().clone().add(0.5, 0.5, 0.5);
-        treeBlock.getWorld().spawnParticle(Particle.BLOCK, location, 10, treeBlock.getBlockData());
+        if ((NMSUtil.getVersionNumber() > 21 || (NMSUtil.getVersionNumber() == 21 && NMSUtil.getMinorVersionNumber() >= 5)) && treeBlock.getTreeBlockType() == TreeBlockType.LEAF) {
+            switch (treeBlock.getBlockData().getMaterial().getKey().getKey()) {
+                case "cherry_leaves" -> treeBlock.getWorld().spawnParticle(Particle.CHERRY_LEAVES, location, 2, 0.75, 0.75, 0.75);
+                case "pale_oak_leaves" -> treeBlock.getWorld().spawnParticle(Particle.PALE_OAK_LEAVES, location, 2, 0.75, 0.75, 0.75);
+                default -> {
+                    Color color = treeBlock.getBlockData().getMapColor();
+                    color.setRed(Math.min(255, Math.max(0, color.getRed() + TimberUtils.RANDOM.nextInt(11))));
+                    color.setGreen(Math.min(255, Math.max(0, color.getGreen() + TimberUtils.RANDOM.nextInt(11))));
+                    color.setBlue(Math.min(255, Math.max(0, color.getBlue() + TimberUtils.RANDOM.nextInt(11))));
+                    treeBlock.getWorld().spawnParticle(Particle.TINTED_LEAVES, location, 2, 0.75, 0.75, 0.75, color);
+                }
+            }
+            treeBlock.getWorld().spawnParticle(VersionUtils.BLOCK, location, 7, 0.5, 0.2, 0.5, treeBlock.getBlockData());
+        } else {
+            treeBlock.getWorld().spawnParticle(VersionUtils.BLOCK, location, 10, 0.5, 0.2, 0.5, treeBlock.getBlockData());
+        }
     }
 
     /**
@@ -117,7 +136,7 @@ public abstract class TreeAnimation {
      */
     public void playLandingParticles(ITreeBlock<?> treeBlock) {
         Location location = treeBlock.getLocation().clone().add(0.5, 0.5, 0.5);
-        treeBlock.getWorld().spawnParticle(Particle.BLOCK_CRUMBLE, location, 10, treeBlock.getBlockData());
+        treeBlock.getWorld().spawnParticle(VersionUtils.BLOCK_CRUMBLE, location, 10, 0.5, 0.2, 0.5, treeBlock.getBlockData());
     }
 
     /**
@@ -127,7 +146,7 @@ public abstract class TreeAnimation {
      */
     public void playFallingSound(ITreeBlock<?> treeBlock) {
         Location location = treeBlock.getLocation();
-        treeBlock.getWorld().playSound(location, Sound.BLOCK_CHEST_OPEN, 2F, 0.1F);
+        treeBlock.getWorld().playSound(location, Sound.BLOCK_CHEST_OPEN, 1F, 0.1F);
     }
 
     /**
@@ -138,7 +157,7 @@ public abstract class TreeAnimation {
     public void playLandingSound(ITreeBlock<?> treeBlock) {
         Location location = treeBlock.getLocation();
         if (treeBlock.getTreeBlockType().equals(TreeBlockType.LOG)) {
-            treeBlock.getWorld().playSound(location, Sound.BLOCK_WOOD_FALL, 2F, 0.1F);
+            treeBlock.getWorld().playSound(location, Sound.BLOCK_WOOD_FALL, 1F, 0.1F);
         } else {
             treeBlock.getWorld().playSound(location, Sound.BLOCK_GRASS_BREAK, 0.5F, 0.75F);
         }

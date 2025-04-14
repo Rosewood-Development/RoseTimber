@@ -29,15 +29,15 @@ repositories {
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url = 'https://repo.codemc.org/repository/maven-public' }
     maven { url = 'https://repo.papermc.io/repository/maven-public/' }
-    maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url = 'https://repo.auxilor.io/repository/maven-public/' }
     maven { url = 'https://maven.playpro.com' }
     maven { url = 'https://jitpack.io' }
 
     maven {
         url = 'https://repo.rosewooddev.io/repository/maven-public'
         credentials {
-            username project.mavenUser
-            password project.mavenPassword
+            username = project.mavenUser
+            password = project.mavenPassword
             authentication {
                 basic(BasicAuthentication)
             }
@@ -46,11 +46,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT'
 
     // Plugin Hooks
     compileOnly 'net.coreprotect:coreprotect:22.4'
     compileOnly 'com.gmail.nossr50:mcmmo:2.1.209'
+//    compileOnly 'com.willfp:eco:6.71.4'
+//    compileOnly 'com.willfp:EcoSkills:3.58.0'
 //    compileOnly 'com.github.Zrips:Jobs:4.17.2' // Future Problem
 
     // From our repo
@@ -67,7 +69,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.yml'
         filter ReplaceTokens, tokens: ["version": project.property("version")]
-        duplicatesStrategy DuplicatesStrategy.INCLUDE
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
 

@@ -30,6 +30,7 @@ public class HookManager extends Manager {
         this.hooks.clear();
 
         this.tryHook("CoreProtect", CoreProtectHook.class);
+//        this.tryHook("EcoSkills", EcoSkillsHook.class);
 
         Plugin mcMMO = Bukkit.getPluginManager().getPlugin("mcMMO");
         if (mcMMO != null) {
